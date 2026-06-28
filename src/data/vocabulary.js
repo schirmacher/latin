@@ -1,0 +1,178 @@
+// Lateinischer Grundwortschatz, aufgeteilt in thematische Decks
+export const vocabularyDecks = [
+  {
+    id: "beg_chap_1_vocab",
+    name: "Anfänger: Geographie (Lektion 1)",
+    description: "Der allererste Wortschatz. Lerne Bezeichnungen für Länder, Flüsse und grundlegende Verben.",
+    level: "beginner",
+    cards: [
+      { latin: "roma", forms: "Romae, f.", translation: "Rom", explanation: "Eigenname (1. Deklination)" },
+      { latin: "italia", forms: "Italiae, f.", translation: "Italien", explanation: "Eigenname (1. Deklination)" },
+      { latin: "europa", forms: "Europae, f.", translation: "Europa", explanation: "Eigenname (1. Deklination)" },
+      { latin: "germania", forms: "Germaniae, f.", translation: "Deutschland / Germanien", explanation: "Eigenname (1. Deklination)" },
+      { latin: "terra", forms: "terrae, f.", translation: "Erde, Land, Landstrich", explanation: "Substantiv (1. Deklination)" },
+      { latin: "insula", forms: "insulae, f.", translation: "Insel; Mietshaus", explanation: "Substantiv (1. Deklination)" },
+      { latin: "fluvius", forms: "fluvii, m.", translation: "Fluss, Strom", explanation: "Substantiv (2. Deklination)" },
+      { latin: "magnus", forms: "magna, magnum", translation: "groß, bedeutend", explanation: "Adjektiv (a-/o-Deklination)" },
+      { latin: "est", forms: "Verb (esse)", translation: "ist", explanation: "3. Person Singular Präsens" },
+      { latin: "sunt", forms: "Verb (esse)", translation: "sind", explanation: "3. Person Plural Präsens" },
+      { latin: "in", forms: "Präposition (+ Abl.)", translation: "in, auf, an (Wo?)", explanation: "Präposition des Ortes" },
+      { latin: "et", forms: "Konjunktion", translation: "und", explanation: "Verbindungswort" }
+    ]
+  },
+  {
+    id: "beg_chap_2_vocab",
+    name: "Anfänger: Die römische Familie (Lektion 2)",
+    description: "Wortschatz rund um Verwandte, Männer und Frauen sowie einfache Genitiv-Satzmuster.",
+    level: "beginner",
+    cards: [
+      { latin: "vir", forms: "viri, m.", translation: "Mann, Ehemann", explanation: "Substantiv (2. Deklination)" },
+      { latin: "femina", forms: "feminae, f.", translation: "Frau, Ehefrau", explanation: "Substantiv (1. Deklination)" },
+      { latin: "filius", forms: "filii, m.", translation: "Sohn", explanation: "Substantiv (2. Deklination)" },
+      { latin: "filia", forms: "filiae, f.", translation: "Tochter", explanation: "Substantiv (1. Deklination)" },
+      { latin: "pater", forms: "patris, m.", translation: "Vater", explanation: "Substantiv (3. Deklination)" },
+      { latin: "mater", forms: "matris, f.", translation: "Mutter", explanation: "Substantiv (3. Deklination)" },
+      { latin: "romanus", forms: "romana, romanum", translation: "römisch", explanation: "Adjektiv (a-/o-Deklination)" },
+      { latin: "liberi", forms: "liberorum, m. Pl.", translation: "Kinder (freie Kinder)", explanation: "Substantiv (2. Deklination, tritt meist nur im Plural auf)" },
+      { latin: "quis", forms: "Pronomen (m./f.)", translation: "wer?", explanation: "Fragepronomen" },
+      { latin: "quae", forms: "Pronomen (f./n. Pl.)", translation: "wer? (weiblich) / welche?", explanation: "Frage- oder Relativpronomen" }
+    ]
+  },
+  {
+    id: "basic_core",
+    name: "Auffrischung: Einstiegskurs",
+    description: "Einfache Wörter für den schnellen Einstieg, um dein Gedächtnis zu reaktivieren.",
+    level: "intermediate",
+    cards: [
+      { latin: "pater", forms: "patris, m.", translation: "Vater", explanation: "Substantiv (3. Deklination)" },
+      { latin: "mater", forms: "matris, f.", translation: "Mutter", explanation: "Substantiv (3. Deklination)" },
+      { latin: "filius", forms: "filii, m.", translation: "Sohn", explanation: "Substantiv (2. Deklination)" },
+      { latin: "filia", forms: "filiae, f.", translation: "Tochter", explanation: "Substantiv (1. Deklination)" },
+      { latin: "amicus", forms: "amici, m.", translation: "Freund", explanation: "Substantiv (2. Deklination)" },
+      { latin: "amica", forms: "amicae, f.", translation: "Freundin", explanation: "Substantiv (1. Deklination)" },
+      { latin: "domus", forms: "domus, f.", translation: "Haus, Heim", explanation: "Substantiv (Achtung: U-Deklination mit O-Einflüssen)" },
+      { latin: "urbs", forms: "urbis, f.", translation: "Stadt", explanation: "Substantiv (3. Deklination)" },
+      { latin: "studere", forms: "studeo, studui, - (+ Dat.)", translation: "sich bemühen, lernen, studieren", explanation: "Verb (e-Konjugation)" },
+      { latin: "scribere", forms: "scribo, scripsi, scriptum", translation: "schreiben", explanation: "Verb (kons. Konjugation)" },
+      { latin: "legere", forms: "lego, legi, lectum", translation: "lesen, auswählen", explanation: "Verb (kons. Konjugation)" },
+      { latin: "habitare", forms: "habito, habitavi, habitatum", translation: "wohnen", explanation: "Verb (a-Konjugation)" }
+    ]
+  },
+  {
+    id: "verbs_frequency",
+    name: "Auffrischung: Häufige Verben",
+    description: "Die wichtigsten lateinischen Verben, die man für fast jeden Text benötigt.",
+    level: "intermediate",
+    cards: [
+      { latin: "esse", forms: "sum, fui", translation: "sein", explanation: "Hilfsverb (unregelmäßig)" },
+      { latin: "posse", forms: "possum, potui", translation: "können", explanation: "Hilfsverb (unregelmäßig)" },
+      { latin: "velle", forms: "volo, volui", translation: "wollen", explanation: "Verb (unregelmäßig)" },
+      { latin: "nolle", forms: "nolo, nolui", translation: "nicht wollen", explanation: "Verb (unregelmäßig)" },
+      { latin: "ire", forms: "eo, ii, itum", translation: "gehen", explanation: "Verb (unregelmäßig)" },
+      { latin: "agere", forms: "ago, egi, actum", translation: "tun, handeln, treiben", explanation: "Verb (kons. Konjugation)" },
+      { latin: "facere", forms: "facio, feci, factum", translation: "tun, machen, herstellen", explanation: "Verb (gemischte Konjugation)" },
+      { latin: "dicere", forms: "dico, dixi, dictum", translation: "sagen, sprechen, nennen", explanation: "Verb (kons. Konjugation)" },
+      { latin: "dare", forms: "do, dedi, datum", translation: "geben", explanation: "Verb (a-Konjugation, aber kurzes 'a' in den Formen)" },
+      { latin: "videre", forms: "video, vidi, visum", translation: "sehen", explanation: "Verb (e-Konjugation)" },
+      { latin: "audire", forms: "audio, audivi, auditum", translation: "hören", explanation: "Verb (i-Konjugation)" },
+      { latin: "venire", forms: "venio, veni, ventum", translation: "kommen", explanation: "Verb (i-Konjugation)" },
+      { latin: "mittere", forms: "mitto, misi, missum", translation: "schicken, senden, entlassen", explanation: "Verb (kons. Konjugation)" },
+      { latin: "vincere", forms: "vinco, vici, victum", translation: "siegen, besiegen", explanation: "Verb (kons. Konjugation)" }
+    ]
+  },
+  {
+    id: "nouns_essential",
+    name: "Auffrischung: Wichtige Substantive",
+    description: "Grundlegende Substantive aus den verschiedenen Deklinationen.",
+    level: "intermediate",
+    cards: [
+      { latin: "res", forms: "rei, f.", translation: "Sache, Ding, Angelegenheit", explanation: "Substantiv (e-Deklination)" },
+      { latin: "homo", forms: "hominis, m.", translation: "Mensch, Mann", explanation: "Substantiv (3. Deklination)" },
+      { latin: "vir", forms: "viri, m.", translation: "Mann", explanation: "Substantiv (2. Deklination)" },
+      { latin: "femina", forms: "feminae, f.", translation: "Frau", explanation: "Substantiv (1. Deklination)" },
+      { latin: "deus", forms: "dei, m.", translation: "Gott", explanation: "Substantiv (2. Deklination)" },
+      { latin: "bellum", forms: "belli, n.", translation: "Krieg", explanation: "Substantiv (2. Deklination, Neutrum)" },
+      { latin: "pax", forms: "pacis, f.", translation: "Friede", explanation: "Substantiv (3. Deklination)" },
+      { latin: "amor", forms: "amoris, m.", translation: "Liebe", explanation: "Substantiv (3. Deklination)" },
+      { latin: "tempus", forms: "temporis, n.", translation: "Zeit", explanation: "Substantiv (3. Deklination, Neutrum)" },
+      { latin: "animus", forms: "animi, m.", translation: "Geist, Mut, Gemüt", explanation: "Substantiv (2. Deklination)" },
+      { latin: "corpus", forms: "corporis, n.", translation: "Körper, Leib", explanation: "Substantiv (3. Deklination, Neutrum)" },
+      { latin: "dies", forms: "diei, m./f.", translation: "Tag", explanation: "Substantiv (e-Deklination, meist maskulin)" }
+    ]
+  },
+  {
+    id: "connectors_particles",
+    name: "Kernwortschatz: Konnektoren & Partikeln",
+    description: "Die kleinen Bindeglieder des Lateinischen. Unerlässlich für das Verständnis von Satzgefügen.",
+    level: "intermediate",
+    cards: [
+      { latin: "sed", forms: "Konjunktion", translation: "aber, sondern", explanation: "Gegensatz" },
+      { latin: "autem", forms: "Konjunktion (nachgestellt)", translation: "aber, jedoch", explanation: "Tritt meist als 2. Wort im Satz auf" },
+      { latin: "tamen", forms: "Adverb", translation: "dennoch, trotzdem", explanation: "Konzessiv-Signal" },
+      { latin: "enim", forms: "Konjunktion (nachgestellt)", translation: "nämlich, denn", explanation: "Begründung" },
+      { latin: "nam", forms: "Konjunktion", translation: "denn, nämlich", explanation: "Steht immer am Satzanfang" },
+      { latin: "etiam", forms: "Adverb", translation: "auch, sogar, noch", explanation: "Steigerung" },
+      { latin: "quoque", forms: "Adverb (nachgestellt)", translation: "auch", explanation: "Bezieht sich auf das vorhergehende Wort" },
+      { latin: "non solum ... sed etiam", forms: "Wendung", translation: "nicht nur ... sondern auch", explanation: "Zweiteilige Konjunktion" },
+      { latin: "ita / sic", forms: "Adverb", translation: "so, auf diese Weise", explanation: "Vergleich/Art und Weise" },
+      { latin: "tum / deinde", forms: "Adverb", translation: "dann, darauf, damals", explanation: "Zeitfolge" },
+      { latin: "tandem", forms: "Adverb", translation: "endlich, schließlich", explanation: "Zeitdauer" },
+      { latin: "iam", forms: "Adverb", translation: "schon, bereits", explanation: "Gegenwart" },
+      { latin: "nunc", forms: "Adverb", translation: "jetzt, nun", explanation: "Gegenwart" },
+      { latin: "ibi / ubi", forms: "Adverb / Konjunktion", translation: "dort / wo, sobald", explanation: "Ortsangabe" },
+      { latin: "inde", forms: "Adverb", translation: "von dort, daher, daraufhin", explanation: "Herkunft/Folge" },
+      { latin: "cur", forms: "Frageadverb", translation: "warum?", explanation: "Frage" },
+      { latin: "quomodo", forms: "Frageadverb", translation: "wie?, auf welche Weise?", explanation: "Frage" }
+    ]
+  },
+  {
+    id: "adjectives_essential",
+    name: "Kernwortschatz: Wichtige Adjektive",
+    description: "Häufige Adjektive der a-/o- und der 3. Deklination.",
+    level: "intermediate",
+    cards: [
+      { latin: "magnus", forms: "magna, magnum", translation: "groß, bedeutend", explanation: "a-/o-Deklination" },
+      { latin: "parvus", forms: "parva, parvum", translation: "klein, gering", explanation: "a-/o-Deklination" },
+      { latin: "bonus", forms: "bona, bonum", translation: "gut, tüchtig", explanation: "a-/o-Deklination" },
+      { latin: "malus", forms: "mala, malum", translation: "schlecht, böse", explanation: "a-/o-Deklination" },
+      { latin: "multus", forms: "multa, multum", translation: "viel, zahlreich", explanation: "a-/o-Deklination" },
+      { latin: "pauci", forms: "paucae, pauca (Plural)", translation: "wenige", explanation: "a-/o-Deklination (tritt meist nur im Plural auf)" },
+      { latin: "omnis", forms: "omnis, omne", translation: "ganz, jeder; Pl: alle", explanation: "3. Deklination (zweiendige Endung)" },
+      { latin: "fortis", forms: "fortis, forte", translation: "tapfer, kräftig, stark", explanation: "3. Deklination" },
+      { latin: "brevis", forms: "brevis, breve", translation: "kurz", explanation: "3. Deklination" },
+      { latin: "facilis", forms: "facilis, facile", translation: "leicht (zu tun)", explanation: "3. Deklination" },
+      { latin: "difficilis", forms: "difficilis, difficile", translation: "schwierig, schwer", explanation: "3. Deklination" },
+      { latin: "novus", forms: "nova, novum", translation: "neu, ungewöhnlich", explanation: "a-/o-Deklination" },
+      { latin: "vetus", forms: "veteris (Gen.)", translation: "alt", explanation: "3. Deklination (einendig, Konsonantischer Stamm)" },
+      { latin: "longus", forms: "longa, longum", translation: "lang, weitreichend", explanation: "a-/o-Deklination" },
+      { latin: "latus", forms: "lata, latum", translation: "breit, weit ausgedehnt", explanation: "a-/o-Deklination" }
+    ]
+  },
+  {
+    id: "caesar_military",
+    name: "Caesar-Vokabular (Militär & Staat)",
+    description: "Spezifischer Kernwortschatz für De Bello Gallico und historische Berichte.",
+    level: "intermediate",
+    cards: [
+      { latin: "hostis", forms: "hostis, m.", translation: "Feind (Landesfeind)", explanation: "Substantiv (3. Deklination, Mischstamm)" },
+      { latin: "miles", forms: "militis, m.", translation: "Soldat", explanation: "Substantiv (3. Deklination, Kons. Stamm)" },
+      { latin: "legio", forms: "legionis, f.", translation: "Legion (ca. 4000-6000 Soldaten)", explanation: "Substantiv (3. Deklination)" },
+      { latin: "castra", forms: "castrorum, n. Plur.", translation: "Lager (Militärlager)", explanation: "Substantiv (2. Deklination, Pluraletantum - Singular existiert nicht)" },
+      { latin: "proelium", forms: "proelii, n.", translation: "Kampf, Schlacht", explanation: "Substantiv (2. Deklination)" },
+      { latin: "copia", forms: "copiae, f.", translation: "Menge, Vorrat; Plur: Truppen", explanation: "Substantiv (1. Deklination - Pluralbedeutung 'copiae' = Truppen beachten!)" },
+      { latin: "iter", forms: "itineris, n.", translation: "Weg, Marsch, Reise", explanation: "Substantiv (3. Deklination, unregelmäßiger Stamm im Genitiv)" },
+      { latin: "flumen", forms: "fluminis, n.", translation: "Fluss", explanation: "Substantiv (3. Deklination, Neutrum)" },
+      { latin: "fines", forms: "finium, m. Plur.", translation: "Grenzen, Gebiet, Territorium", explanation: "Singular 'finis' = Grenze/Ende; Plural = Gebiet" },
+      { latin: "civitas", forms: "civitatis, f.", translation: "Bürgerschaft, Staat, Stamm", explanation: "Substantiv (3. Deklination)" },
+      { latin: "legatus", forms: "legati, m.", translation: "Gesandter, Unterfeldherr (Legat)", explanation: "Substantiv (2. Deklination)" },
+      { latin: "imperator", forms: "imperatoris, m.", translation: "Feldherr, Befehlshaber", explanation: "Substantiv (3. Deklination)" },
+      { latin: "prope", forms: "Präposition (+ Akk.)", translation: "nahe bei, nahe an", explanation: "Kann auch als Adverb 'beinahe' auftreten" },
+      { latin: "trans", forms: "Präposition (+ Akk.)", translation: "jenseits, über ... hinüber", explanation: "Sehr häufig bei Flussüberquerungen" },
+      { latin: "pugnare", forms: "pugno, pugnavi, pugnatum", translation: "kämpfen", explanation: "Verb (1. Konjugation)" },
+      { latin: "vincere", forms: "vinco, vici, victum", translation: "siegen, besiegen, überwinden", explanation: "Verb (3. Konjugation)" },
+      { latin: "capere", forms: "capio, cepi, captum", translation: "fangen, ergreifen, einnehmen", explanation: "Verb (gemischte Konjugation)" },
+      { latin: "interficere", forms: "interficio, interfeci, interfectum", translation: "töten, niedermachen", explanation: "Verb (gemischte Konjugation, Kompositum von facere)" },
+      { latin: "gerere", forms: "gero, gessi, gestum", translation: "tragen, ausführen (bellum gerere = Krieg führen)", explanation: "Verb (3. Konjugation)" }
+    ]
+  }
+];
