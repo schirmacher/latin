@@ -29,6 +29,19 @@ export class ReaderController {
     this.selectEl.addEventListener('change', (e) => this.loadText(e.target.value));
     this.toggleTranslationBtn.addEventListener('click', () => this.toggleTranslations());
     this.addToVocabBtn.addEventListener('click', () => this.addSelectedToVocab());
+
+    // Mobile close drawer button
+    const closeDrawerBtn = document.getElementById('btn-close-drawer');
+    if (closeDrawerBtn) {
+      closeDrawerBtn.addEventListener('click', () => {
+        const sidepanel = document.querySelector('.reader-sidepanel');
+        if (sidepanel) {
+          sidepanel.classList.remove('drawer-open');
+        }
+        // Deselect active word in reader text
+        this.contentEl.querySelectorAll('.latin-word').forEach(el => el.classList.remove('active-word'));
+      });
+    }
   }
 
   updateSelectOptions() {
@@ -124,6 +137,12 @@ export class ReaderController {
     this.contentEl.querySelectorAll('.latin-word').forEach(el => el.classList.remove('active-word'));
     wordEl.classList.add('active-word');
 
+    // Open drawer on mobile
+    const sidepanel = document.querySelector('.reader-sidepanel');
+    if (sidepanel) {
+      sidepanel.classList.add('drawer-open');
+    }
+
     const cleanWord = wordEl.getAttribute('data-word');
     const wordData = this.currentText.lexicon[cleanWord];
 
@@ -190,6 +209,12 @@ export class ReaderController {
       </div>
     `;
     this.analysisFooterEl.style.display = 'none';
+
+    // Close drawer on mobile
+    const sidepanel = document.querySelector('.reader-sidepanel');
+    if (sidepanel) {
+      sidepanel.classList.remove('drawer-open');
+    }
   }
 
   toggleTranslations() {
