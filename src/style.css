@@ -86,6 +86,102 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+/* Sidebar Sections and Stats styles */
+.sidebar-section {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  display: block;
+}
+
+.sidebar-stats-list {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 8px 12px;
+  border-radius: var(--border-radius-md);
+}
+
+.stat-icon {
+  font-size: 16px;
+}
+
+.stat-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-val {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent-indigo);
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* Mobile Sidebar Backdrop */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 998;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-backdrop.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Hamburger toggle button */
+.menu-toggle-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 8px;
+  width: 38px;
+  height: 38px;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+}
+
+.menu-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+
 .nav-menu {
   list-style: none;
   display: flex;
@@ -1033,117 +1129,141 @@ body {
 @media (max-width: 768px) {
   body {
     flex-direction: column;
-    overflow: hidden; /* Lock scroll to main-content view */
+    overflow: hidden; /* Prevent body scrolling */
   }
 
   #app {
     flex-direction: column;
     height: 100vh;
     width: 100vw;
+    overflow: hidden;
   }
 
-  /* Transform Sidebar to Bottom Navigation */
+  /* Slide-out Sidebar Drawer */
   .sidebar {
-    width: 100vw;
-    height: 65px;
     position: fixed;
-    bottom: 0;
+    top: 0;
     left: 0;
-    flex-direction: row;
-    padding: 0 8px;
-    border-right: none;
-    border-top: 1px solid var(--border-color);
-    z-index: 1000;
-    justify-content: space-between;
-    align-items: center;
+    height: 100vh;
+    width: 280px;
+    z-index: 1001; /* Above backdrop and reader drawer */
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 10px 0 40px rgba(0, 0, 0, 0.6);
     background-color: var(--bg-secondary);
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+    border-right: 1px solid var(--border-color);
+    flex-direction: column;
+    padding: 24px;
+    display: flex !important;
   }
 
-  .logo-container, .sidebar-footer {
-    display: none !important; /* Hide logo and footer on mobile bottom nav */
+  /* Show sidebar when body/app has sidebar-open class */
+  .sidebar-open .sidebar {
+    transform: translateX(0);
   }
 
+  .logo-container {
+    display: flex !important;
+    margin-bottom: 24px;
+  }
+
+  .sidebar-footer {
+    display: block !important;
+    margin-top: auto;
+    padding-top: 16px;
+  }
+
+  /* Vertical Navigation in Drawer */
   .nav-menu {
-    flex-direction: row;
+    flex-direction: column;
     width: 100%;
-    gap: 0;
-    justify-content: space-around;
+    gap: 6px;
+    margin-bottom: 24px;
   }
 
   .nav-item {
-    flex: 1;
-    text-align: center;
+    width: 100%;
+    text-align: left;
   }
 
   .nav-link {
-    flex-direction: column;
-    gap: 4px;
-    padding: 8px 0;
-    font-size: 10px;
-    border-radius: 0;
-    background: transparent !important;
-    border: none !important;
+    flex-direction: row;
+    gap: 14px;
+    padding: 12px 16px;
+    font-size: 14px;
+    border-radius: var(--border-radius-md);
     color: var(--text-secondary);
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    background: transparent;
+    border: 1px solid transparent;
+  }
+
+  .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+    color: var(--text-primary);
   }
 
   .nav-link.active {
-    color: var(--accent-indigo);
-    background-color: transparent !important;
+    background-color: var(--accent-indigo-glow) !important;
+    color: #c7d2fe;
+    border: 1px solid rgba(99, 102, 241, 0.2);
   }
 
   .nav-icon {
-    font-size: 20px;
+    font-size: 18px;
     margin: 0;
   }
 
-  /* Adjust Main Content for Bottom Nav */
+  /* Main Content: Fill Entire Screen */
   .main-content {
-    padding-bottom: 80px; /* Leave space for bottom nav */
-    height: 100vh;
+    padding-bottom: 0px; /* No bottom nav */
+    height: calc(100vh - 52px);
+    width: 100vw;
     overflow-y: auto;
   }
 
+  /* Compact top bar with Hamburger Toggle */
   .top-bar {
-    padding: 16px 20px;
-    height: auto;
-    flex-direction: column;
+    height: 52px;
+    padding: 0 16px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
     gap: 12px;
-    align-items: stretch;
     border-bottom: 1px solid var(--border-color);
+    background-color: var(--bg-secondary);
+    z-index: 10;
   }
 
   .top-bar > div:first-child {
-    justify-content: space-between;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     width: 100%;
+  }
+
+  .top-bar h1 {
+    font-size: 18px;
+    margin: 0;
+  }
+
+  .menu-toggle-btn {
+    display: flex !important; /* Show on mobile */
   }
 
   .stats-summary {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    width: 100%;
-  }
-
-  .stat-pill {
-    padding: 6px 4px;
-    font-size: 11px;
-    justify-content: center;
-    text-align: center;
-    border-radius: 12px;
-    white-space: nowrap;
+    display: none !important; /* Hide stats from top bar on mobile */
   }
 
   .view-container {
-    padding: 20px 16px;
+    padding: 16px;
   }
 
   /* Dashboard Grid */
   .dashboard-grid {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
   }
 
   .progress-overview {
@@ -1153,31 +1273,31 @@ body {
 
   /* Flashcards */
   .card-outer-container {
-    height: 310px;
+    height: 290px;
   }
 
   .card-face {
-    padding: 24px;
+    padding: 20px;
   }
 
   .card-word {
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .card-subtext {
-    font-size: 14px;
-  }
-
-  .vocab-action-buttons {
-    gap: 12px;
-  }
-
-  .vocab-action-buttons .btn {
-    height: 44px;
     font-size: 13px;
   }
 
-  /* Reader Mobile Drawer Setup */
+  .vocab-action-buttons {
+    gap: 10px;
+  }
+
+  .vocab-action-buttons .btn {
+    height: 40px;
+    font-size: 13px;
+  }
+
+  /* Reader mobile layout */
   .reader-layout {
     grid-template-columns: 1fr;
     height: auto;
@@ -1185,22 +1305,24 @@ body {
   }
 
   .reader-body-card {
-    padding: 20px 16px;
-    margin-bottom: 20px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: var(--border-radius-md);
   }
 
   .reader-text-area {
-    font-size: 17px;
-    line-height: 1.7;
+    font-size: 16px;
+    line-height: 1.6;
   }
 
+  /* Slide up word drawer directly from bottom */
   .reader-sidepanel {
     position: fixed;
-    bottom: 65px; /* exact height of bottom nav */
+    bottom: 0; /* Bottom sheet at the screen bottom */
     left: 0;
     width: 100vw;
     height: auto;
-    max-height: 60vh;
+    max-height: 55vh;
     z-index: 999;
     transform: translateY(100%);
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1216,7 +1338,7 @@ body {
     border-bottom: none !important;
     border-left: none !important;
     border-right: none !important;
-    padding: 20px 20px 30px 20px !important;
+    padding: 16px 16px 24px 16px !important;
     background: #111425 !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
@@ -1224,13 +1346,13 @@ body {
 
   .sidepanel-header {
     padding-bottom: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
-  /* Add close drawer button on mobile */
+  /* Mobile close drawer button */
   .drawer-close-btn {
     display: inline-block !important;
     background: rgba(255, 255, 255, 0.06);
@@ -1251,50 +1373,51 @@ body {
   }
 
   .word-info {
-    gap: 12px;
+    gap: 8px;
   }
 
   .word-hero {
-    padding: 12px;
+    padding: 10px;
   }
 
   .word-hero .word-latin {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .info-row {
-    padding-bottom: 8px;
+    padding-bottom: 6px;
+    font-size: 13px;
   }
 
   .info-val.translation-val {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   /* Grammar Drills */
   .drill-container {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
   }
 
   .drill-title-area {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: 8px;
   }
 
   .drill-table th, .drill-table td {
-    padding: 10px 8px;
-    font-size: 13px;
+    padding: 8px 6px;
+    font-size: 12px;
   }
 
   .drill-input {
-    padding: 6px 8px;
-    font-size: 13px;
+    padding: 5px 6px;
+    font-size: 12px;
   }
 
   .score-circle {
-    width: 90px;
-    height: 90px;
-    font-size: 20px;
+    width: 80px;
+    height: 80px;
+    font-size: 18px;
   }
 }

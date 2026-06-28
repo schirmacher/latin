@@ -79,6 +79,13 @@ class App {
           // Re-populate decks in case user added new custom vocabulary from the reader
           this.vocabTrainerController.populateDecks();
         }
+
+        // Close sidebar drawer on mobile after clicking navigation
+        document.body.classList.remove('sidebar-open');
+        const backdrop = document.getElementById('sidebar-backdrop');
+        if (backdrop) {
+          backdrop.classList.remove('active');
+        }
       });
     });
 
@@ -114,6 +121,27 @@ class App {
         this.handleLevelChange();
       });
     }
+
+    // 7. Mobile Sidebar Hamburger Menu Toggle
+    const menuToggleBtn = document.getElementById('menu-toggle-btn');
+    const sidebarBackdrop = document.getElementById('sidebar-backdrop');
+    
+    if (menuToggleBtn) {
+      menuToggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('sidebar-open');
+        if (sidebarBackdrop) {
+          sidebarBackdrop.classList.toggle('active');
+        }
+      });
+    }
+
+    if (sidebarBackdrop) {
+      sidebarBackdrop.addEventListener('click', () => {
+        document.body.classList.remove('sidebar-open');
+        sidebarBackdrop.classList.remove('active');
+      });
+    }
+
     this.handleLevelChange(); // set initial dashboard text
   }
 
