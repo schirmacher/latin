@@ -1,0 +1,7 @@
+services:
+  web:
+    build: .
+    container_name: latin-web-local
+    restart: always
+    ports:
+      - "10003:80"

@@ -1,0 +1,8 @@
+services:
+  web:
+    image: ghcr.io/schirmacher/latin:latest
+    container_name: latin-web-prod
+    restart: always
+    ports:
+      # Expose Nginx on port 10003 (to be reverse-proxied by Nginx/Caddy with SSL on the host)
+      - "10003:80"
