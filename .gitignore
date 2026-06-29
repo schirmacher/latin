@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# StarDict and local keys
+georges_stardict/
+latin
+latin.pub

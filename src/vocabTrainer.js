@@ -1,5 +1,6 @@
 import { vocabularyDecks, baseTranslationOverrides } from './data/vocabulary.js';
 import { texts } from './data/texts.js';
+import { georgesDictionary } from './data/dictionary.js';
 
 const LEITNER_INTERVALS = {
   1: 0,                           // Box 1: Sofort fällig (0 Std.)
@@ -94,6 +95,9 @@ export class VocabTrainerController {
     const cleanWord = latinWord.toLowerCase().trim();
     if (baseTranslationOverrides[cleanWord]) {
       return baseTranslationOverrides[cleanWord];
+    }
+    if (georgesDictionary[cleanWord]) {
+      return georgesDictionary[cleanWord];
     }
     for (const deck of vocabularyDecks) {
       const card = deck.cards.find(c => c.latin.toLowerCase() === cleanWord);
@@ -338,6 +342,22 @@ export class VocabTrainerController {
     this.backWordEl.textContent = card.translation;
     this.backSubEl.textContent = card.explanation || '';
     
+    // Georges lookup for flashcard back
+    const georgesEl = document.getElementById('card-back-georges');
+    if (georgesEl) {
+      const cleanWord = card.latin.toLowerCase().trim();
+      const georgesEntry = georgesDictionary[cleanWord];
+      if (georgesEntry && georgesEntry.html) {
+        georgesEl.innerHTML = `
+          <div style="font-size: 10px; font-weight: 600; color: var(--accent-indigo); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">📖 Georges 1913:</div>
+          <div>${georgesEntry.html}</div>
+        `;
+        georgesEl.style.display = 'block';
+      } else {
+        georgesEl.style.display = 'none';
+      }
+    }
+
     // Bind AI button inside card
     const aiBtn = document.getElementById('btn-card-ai-explain');
     if (aiBtn) {

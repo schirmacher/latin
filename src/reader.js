@@ -1,5 +1,6 @@
 import { texts } from './data/texts.js';
 import { vocabularyDecks, baseTranslationOverrides } from './data/vocabulary.js';
+import { georgesDictionary } from './data/dictionary.js';
 
 export class ReaderController {
   constructor(appState, updateStatsCallback) {
@@ -156,6 +157,21 @@ export class ReaderController {
         translation: wordData.translation
       };
 
+      // Look up in Georges dictionary
+      const lemmaKey = wordData.lemma.split(/[,;\s]/)[0].toLowerCase().trim().replace(/[^a-zāēīōū]/g, '');
+      const georgesEntry = georgesDictionary[lemmaKey];
+      let georgesHtmlSection = '';
+      if (georgesEntry && georgesEntry.html) {
+        georgesHtmlSection = `
+          <div style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 12px; text-align: left;">
+            <div style="font-size: 11px; font-weight: 600; color: var(--accent-indigo); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">📖 Georges Handwörterbuch (1913)</div>
+            <div style="font-size: 12px; line-height: 1.5; max-height: 180px; overflow-y: auto; background: rgba(255,255,255,0.015); padding: 8px 10px; border-radius: var(--border-radius-sm); border: 1px solid rgba(255,255,255,0.04); color: var(--text-secondary);">
+              ${georgesEntry.html}
+            </div>
+          </div>
+        `;
+      }
+
       this.analysisBodyEl.innerHTML = `
         <div class="word-info">
           <div class="word-hero">
@@ -174,6 +190,7 @@ export class ReaderController {
             <div class="info-label">Übersetzung (Deutsch)</div>
             <div class="info-val translation-val">${this.selectedWordData.translation}</div>
           </div>
+          ${georgesHtmlSection}
         </div>
       `;
       this.analysisFooterEl.style.display = 'block';
