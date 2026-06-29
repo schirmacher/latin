@@ -90,6 +90,15 @@ export class VocabTrainerController {
     this.loadSelectedDeck();
   }
 
+  findStaticVocabCard(latinWord) {
+    const cleanWord = latinWord.toLowerCase().trim();
+    for (const deck of vocabularyDecks) {
+      const card = deck.cards.find(c => c.latin.toLowerCase() === cleanWord);
+      if (card) return card;
+    }
+    return null;
+  }
+
   // Scrapes all text segments from local texts and creates a dynamic Perseus deck
   getPerseusDeck() {
     const perseusCards = [];
@@ -109,11 +118,24 @@ export class VocabTrainerController {
         // 1. Add the dictionary root (lemma)
         if (!addedKeys.has(rootKey) && lemmaClean.length > 0) {
           addedKeys.add(rootKey);
+
+          // Look up base translation in vocabulary decks if available
+          let baseTranslation = info.translation.split('/')[0].split(';')[0].trim();
+          let baseExplanation = `${info.pos} (Grundform)`;
+
+          const staticCard = this.findStaticVocabCard(lemmaClean);
+          if (staticCard) {
+            baseTranslation = staticCard.translation;
+            if (staticCard.explanation) {
+              baseExplanation = staticCard.explanation;
+            }
+          }
+
           perseusCards.push({
             latin: lemmaClean,
             forms: info.lemma,
-            translation: info.translation.split('/')[0].split(';')[0].trim(),
-            explanation: `${info.pos} (Grundform)`,
+            translation: baseTranslation,
+            explanation: baseExplanation,
             level: "intermediate"
           });
         }

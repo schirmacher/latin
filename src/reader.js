@@ -1,4 +1,5 @@
 import { texts } from './data/texts.js';
+import { vocabularyDecks } from './data/vocabulary.js';
 
 export class ReaderController {
   constructor(appState, updateStatsCallback) {
@@ -244,6 +245,16 @@ export class ReaderController {
     const cleanRoot = this.selectedWordData.lemma.split(/[,;\s]/)[0].toLowerCase().trim().replace(/[^a-zāēīōū]/g, '');
     const inflectedWord = this.selectedWordData.latin.toLowerCase();
 
+    // Helper to find base translation in static decks if available
+    const findStaticVocabCard = (latinWord) => {
+      const clean = latinWord.toLowerCase().trim();
+      for (const deck of vocabularyDecks) {
+        const card = deck.cards.find(c => c.latin.toLowerCase() === clean);
+        if (card) return card;
+      }
+      return null;
+    };
+
     let addedRoot = false;
     let addedForm = false;
 
@@ -253,11 +264,22 @@ export class ReaderController {
         c => c.latin.toLowerCase() === cleanRoot
       );
       if (!rootExists) {
+        let baseTranslation = this.selectedWordData.translation.split('/')[0].split(';')[0].trim();
+        let baseExplanation = `${this.selectedWordData.pos} (Grundform)`;
+
+        const staticCard = findStaticVocabCard(cleanRoot);
+        if (staticCard) {
+          baseTranslation = staticCard.translation;
+          if (staticCard.explanation) {
+            baseExplanation = staticCard.explanation;
+          }
+        }
+
         this.appState.customVocabulary.push({
           latin: cleanRoot,
           forms: this.selectedWordData.lemma,
-          translation: this.selectedWordData.translation.split('/')[0].split(';')[0].trim(),
-          explanation: `${this.selectedWordData.pos} (Grundform)`,
+          translation: baseTranslation,
+          explanation: baseExplanation,
           custom: true
         });
         addedRoot = true;
