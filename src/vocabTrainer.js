@@ -1,4 +1,4 @@
-import { vocabularyDecks } from './data/vocabulary.js';
+import { vocabularyDecks, baseTranslationOverrides } from './data/vocabulary.js';
 import { texts } from './data/texts.js';
 
 const LEITNER_INTERVALS = {
@@ -92,6 +92,9 @@ export class VocabTrainerController {
 
   findStaticVocabCard(latinWord) {
     const cleanWord = latinWord.toLowerCase().trim();
+    if (baseTranslationOverrides[cleanWord]) {
+      return baseTranslationOverrides[cleanWord];
+    }
     for (const deck of vocabularyDecks) {
       const card = deck.cards.find(c => c.latin.toLowerCase() === cleanWord);
       if (card) return card;

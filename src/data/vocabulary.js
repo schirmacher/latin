@@ -176,3 +176,37 @@ export const vocabularyDecks = [
     ]
   }
 ];
+
+// Correct Nominative/Infinitive overrides for Perseus root words to prevent inflected case translations on lemma cards
+export const baseTranslationOverrides = {
+  "puer": { translation: "der Junge", explanation: "Substantiv (2. Deklination, m.)" },
+  "nepos": { translation: "der Enkel", explanation: "Substantiv (3. Deklination, m.)" },
+  "avus": { translation: "der Großvater", explanation: "Substantiv (2. Deklination, m.)" },
+  "oraculum": { translation: "das Orakel / die Prophezeiung", explanation: "Substantiv (2. Deklination, n.)" },
+  "tempestas": { translation: "der Sturm / das Unwetter", explanation: "Substantiv (3. Deklination, f.)" },
+  "sinus": { translation: "der Schoß", explanation: "Substantiv (4. Deklination, m.)" },
+  "arca": { translation: "die Kiste / der Kasten", explanation: "Substantiv (1. Deklination, f.)" },
+  "rex": { translation: "der König", explanation: "Substantiv (3. Deklination, m.)" },
+  "matrimonium": { translation: "die Ehe", explanation: "Substantiv (2. Deklination, n.)" },
+  "consilium": { translation: "der Plan / der Rat / der Entschluss", explanation: "Substantiv (2. Deklination, n.)" },
+  "litus": { translation: "der Strand / die Küste", explanation: "Substantiv (3. Deklination, n.)" },
+  "sedes": { translation: "der Wohnsitz / der Sitz", explanation: "Substantiv (3. Deklination, f.)" },
+  "fines": { translation: "das Gebiet / die Grenzen", explanation: "Substantiv (3. Deklination, m. Pl.)" },
+  "annus": { translation: "das Jahr", explanation: "Substantiv (2. Deklination, m.)" },
+  "vita": { translation: "das Leben", explanation: "Substantiv (1. Deklination, f.)" },
+  "beatus": { translation: "glücklich", explanation: "Adjektiv (a-/o-Deklination)" },
+  "tutus": { translation: "sicher", explanation: "Adjektiv (a-/o-Deklination)" },
+  "ligneus": { translation: "hölzern", explanation: "Adjektiv (a-/o-Deklination)" },
+  "iuvenis": { translation: "der junge Mann / der Jüngling", explanation: "Substantiv (3. Deklination, m.)" },
+  "vires": { translation: "die Kräfte / die Stärke", explanation: "Substantiv (3. Deklination, f. Pl.)" },
+  "caput": { translation: "das Haupt / der Kopf", explanation: "Substantiv (3. Deklination, n.)" },
+  "mare": { translation: "das Meer", explanation: "Substantiv (3. Deklination, n.)" },
+  "medusa": { translation: "Medusa", explanation: "Eigenname" },
+  "polydectes": { translation: "Polydectes", explanation: "Eigenname" },
+  "dictys": { translation: "Dictys", explanation: "Eigenname" },
+  "acrisius": { translation: "Acrisius", explanation: "Eigenname" },
+  "danae": { translation: "Danae", explanation: "Eigenname" },
+  "seriphus": { translation: "Seriphos", explanation: "Eigenname (Insel)" },
+  "iuppiter": { translation: "Jupiter", explanation: "Eigenname (Göttervater)" },
+  "perseus": { translation: "Perseus", explanation: "Eigenname (Held)" }
+};

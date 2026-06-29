@@ -1,5 +1,5 @@
 import { texts } from './data/texts.js';
-import { vocabularyDecks } from './data/vocabulary.js';
+import { vocabularyDecks, baseTranslationOverrides } from './data/vocabulary.js';
 
 export class ReaderController {
   constructor(appState, updateStatsCallback) {
@@ -248,6 +248,9 @@ export class ReaderController {
     // Helper to find base translation in static decks if available
     const findStaticVocabCard = (latinWord) => {
       const clean = latinWord.toLowerCase().trim();
+      if (baseTranslationOverrides[clean]) {
+        return baseTranslationOverrides[clean];
+      }
       for (const deck of vocabularyDecks) {
         const card = deck.cards.find(c => c.latin.toLowerCase() === clean);
         if (card) return card;
