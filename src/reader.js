@@ -30,7 +30,7 @@ export class ReaderController {
     // Event listeners
     this.selectEl.addEventListener('change', (e) => this.loadText(e.target.value));
     this.toggleTranslationBtn.addEventListener('click', () => this.toggleTranslations());
-    this.addToVocabBtn.addEventListener('click', () => this.addSelectedToVocab());
+    this.addToVocabBtn.addEventListener('click', () => this.retrainSelectedWord());
 
     // Mobile close drawer button
     const closeDrawerBtn = document.getElementById('btn-close-drawer');
@@ -356,20 +356,27 @@ export class ReaderController {
       addedForm = true;
     }
 
-    if (addedRoot && addedForm) {
-      this.showToast(`"${inflectedWord}" (Form) & "${cleanRoot}" (Grundform) hinzugefügt!`);
-    } else if (addedForm) {
-      this.showToast(`"${inflectedWord}" wurde zu deinen Vokabeln hinzugefügt!`);
-    } else if (addedRoot) {
-      this.showToast(`Grundform "${cleanRoot}" wurde hinzugefügt!`);
-    } else {
-      this.showToast('Dieses Wort und seine Grundform sind bereits in deinen Vokabeln.');
-    }
-
     this.updateStatsCallback();
   }
 
-  retrainWord(cleanWord) {
+  retrainSelectedWord() {
+    if (!this.selectedWordData) return;
+
+    const inflectedWord = this.selectedWordData.latin.toLowerCase();
+    const cleanRoot = this.selectedWordData.lemma.split(/[,;\s]/)[0].toLowerCase().trim().replace(/[^a-zāēīōū]/g, '');
+
+    // Reset both to Box 1
+    this.retrainWord(inflectedWord, true);
+    
+    if (cleanRoot && cleanRoot !== inflectedWord) {
+      this.retrainWord(cleanRoot, true);
+      this.showToast(`🔄 "${inflectedWord}" & Grundform "${cleanRoot}" zurückgesetzt (Box 1)!`);
+    } else {
+      this.showToast(`🔄 "${inflectedWord}" zurückgesetzt (Box 1)!`);
+    }
+  }
+
+  retrainWord(cleanWord, silent = false) {
     this.appState.vocabProgress = this.appState.vocabProgress || {};
     const progress = this.appState.vocabProgress[cleanWord] || { bin: 1, lastReviewed: 0, nextReview: 0 };
     progress.bin = 1;
@@ -392,6 +399,14 @@ export class ReaderController {
         baseTranslation = wordData.translation;
         baseForms = wordData.lemma;
         baseExplanation = `${wordData.pos} | ${wordData.parse} (Aus: ${this.currentText.title})`;
+      } else {
+        // Fallback search in overrides
+        const overrideCard = findStaticVocabCard(cleanWord);
+        if (overrideCard) {
+          baseTranslation = overrideCard.translation;
+          baseForms = overrideCard.forms || "";
+          baseExplanation = overrideCard.explanation || "";
+        }
       }
       
       this.appState.customVocabulary.push({
@@ -404,7 +419,9 @@ export class ReaderController {
     }
 
     this.updateStatsCallback();
-    this.showToast(`🔄 "${cleanWord}" zurück in Box 1 gelegt (Sofort fällig)!`);
+    if (!silent) {
+      this.showToast(`🔄 "${cleanWord}" zurück in Box 1 gelegt (Sofort fällig)!`);
+    }
   }
 
   showToast(message) {
