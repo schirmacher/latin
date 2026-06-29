@@ -92,8 +92,13 @@ export class ReaderController {
       const wordsHtml = this.formatSentence(sentence, textObj.lexicon);
       
       sentenceContainer.innerHTML = `
-        <div class="sentence-latin-text">${wordsHtml}</div>
-        <div class="sentence-translation">${translation}</div>
+        <div class="sentence-content">
+          <div class="sentence-latin-text">${wordsHtml}</div>
+          <div class="sentence-translation" id="trans-${idx}">${translation}</div>
+        </div>
+        <button class="btn-translate-sentence" data-target="trans-${idx}" title="Satz übersetzen">
+          👁️
+        </button>
       `;
       
       this.contentEl.appendChild(sentenceContainer);
@@ -104,6 +109,28 @@ export class ReaderController {
       wordEl.addEventListener('click', (e) => {
         e.stopPropagation();
         this.selectWord(wordEl);
+      });
+    });
+
+    // Add click listeners to sentence translation toggles
+    this.contentEl.querySelectorAll('.btn-translate-sentence').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const targetId = btn.getAttribute('data-target');
+        const transEl = document.getElementById(targetId);
+        if (transEl) {
+          transEl.classList.toggle('visible');
+          btn.classList.toggle('active');
+        }
+      });
+    });
+
+    // Add click listeners to word retrain buttons
+    this.contentEl.querySelectorAll('.retrain-word-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const cleanWord = btn.getAttribute('data-word');
+        this.retrainWord(cleanWord);
       });
     });
 
@@ -124,10 +151,10 @@ export class ReaderController {
       // Strip punctuation to find clean alphabetical word
       const cleanWord = token.toLowerCase().replace(/[^a-zäöüßāēīōū]/gi, '');
       if (cleanWord.length > 0 && lexicon[cleanWord]) {
-        return `<span class="latin-word" data-word="${cleanWord}">${token}</span>`;
+        return `<span class="latin-word" data-word="${cleanWord}">${token}<span class="retrain-word-btn" data-word="${cleanWord}" title="Zurücksetzen in Box 1">🔄</span></span>`;
       } else if (cleanWord.length > 0) {
         // Fallback for words not in the lexicon
-        return `<span class="latin-word unlisted" data-word="${cleanWord}">${token}</span>`;
+        return `<span class="latin-word unlisted" data-word="${cleanWord}">${token}<span class="retrain-word-btn" data-word="${cleanWord}" title="Zurücksetzen in Box 1">🔄</span></span>`;
       } else {
         return token; // just punctuation
       }
@@ -340,6 +367,44 @@ export class ReaderController {
     }
 
     this.updateStatsCallback();
+  }
+
+  retrainWord(cleanWord) {
+    this.appState.vocabProgress = this.appState.vocabProgress || {};
+    const progress = this.appState.vocabProgress[cleanWord] || { bin: 1, lastReviewed: 0, nextReview: 0 };
+    progress.bin = 1;
+    progress.lastReviewed = Date.now();
+    progress.nextReview = Date.now(); // due immediately
+
+    this.appState.vocabProgress[cleanWord] = progress;
+    
+    // Ensure word exists in custom vocab deck
+    this.appState.customVocabulary = this.appState.customVocabulary || [];
+    const wordExists = this.appState.customVocabulary.some(c => c.latin.toLowerCase() === cleanWord);
+    
+    if (!wordExists) {
+      let baseTranslation = "Unbekannt";
+      let baseForms = "";
+      let baseExplanation = "Klick-Addition";
+      
+      const wordData = this.currentText.lexicon[cleanWord];
+      if (wordData) {
+        baseTranslation = wordData.translation;
+        baseForms = wordData.lemma;
+        baseExplanation = `${wordData.pos} | ${wordData.parse} (Aus: ${this.currentText.title})`;
+      }
+      
+      this.appState.customVocabulary.push({
+        latin: cleanWord,
+        forms: baseForms,
+        translation: baseTranslation,
+        explanation: baseExplanation,
+        custom: true
+      });
+    }
+
+    this.updateStatsCallback();
+    this.showToast(`🔄 "${cleanWord}" zurück in Box 1 gelegt (Sofort fällig)!`);
   }
 
   showToast(message) {
