@@ -250,6 +250,31 @@
               </div>
             </div>
 
+            <!-- Leitner-Boxen Verteilung (Statistik-Übersicht) -->
+            <div id="vocab-bin-distribution" class="glass-card" style="margin-bottom: 20px; padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; border: 1px solid rgba(255, 255, 255, 0.08);">
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+                <span style="font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+                  📊 Leitner-Boxen Verteilung (Gesamter Wortschatz)
+                </span>
+                <span id="vocab-bin-stats-text" style="color: var(--text-secondary); font-size: 11px;">0 Vokabeln im Lernsystem</span>
+              </div>
+              
+              <!-- Stacked horizontal bar chart segment -->
+              <div style="display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: rgba(255, 255, 255, 0.04); width: 100%;" id="vocab-bin-progress-bar">
+                <!-- Dynamisch per JS befüllt -->
+              </div>
+              
+              <!-- Color labels grid -->
+              <div style="display: grid; grid-template-columns: repeat(6, 1fr); text-align: center; font-size: 10px; color: var(--text-secondary); gap: 4px;" id="vocab-bin-labels">
+                <div style="display: flex; flex-direction: column; align-items: center;"><span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #fca5a5; margin-bottom: 2px;"></span> Box 1: <strong id="bin-cnt-1" style="color: var(--text-primary);">0</strong></div>
+                <div style="display: flex; flex-direction: column; align-items: center;"><span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #fed7aa; margin-bottom: 2px;"></span> Box 2: <strong id="bin-cnt-2" style="color: var(--text-primary);">0</strong></div>
+                <div style="display: flex; flex-direction: column; align-items: center;"><span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #fef08a; margin-bottom: 2px;"></span> Box 3: <strong id="bin-cnt-3" style="color: var(--text-primary);">0</strong></div>
+                <div style="display: flex; flex-direction: column; align-items: center;"><span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #bfdbfe; margin-bottom: 2px;"></span> Box 4: <strong id="bin-cnt-4" style="color: var(--text-primary);">0</strong></div>
+                <div style="display: flex; flex-direction: column; align-items: center;"><span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #c7d2fe; margin-bottom: 2px;"></span> Box 5: <strong id="bin-cnt-5" style="color: var(--text-primary);">0</strong></div>
+                <div style="display: flex; flex-direction: column; align-items: center;"><span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #a7f3d0; margin-bottom: 2px;"></span> Box 6: <strong id="bin-cnt-6" style="color: var(--text-primary);">0</strong></div>
+              </div>
+            </div>
+
             <!-- Flashcard -->
             <div class="card-outer-container" id="flashcard-container">
               <div class="card-inner">
@@ -291,11 +316,14 @@
             </div>
 
             <!-- Action Buttons -->
-            <div class="vocab-action-buttons">
-              <button id="btn-vocab-repeat" class="btn btn-danger">
+            <div class="vocab-action-buttons" style="display: flex; gap: 12px; justify-content: center; width: 100%;">
+              <button id="btn-vocab-repeat" class="btn btn-danger" style="flex: 1;">
                 ❌ Wiederholen
               </button>
-              <button id="btn-vocab-known" class="btn btn-primary" style="background: var(--accent-emerald);">
+              <button id="btn-vocab-skip" class="btn btn-secondary" style="flex: 1; background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.1);">
+                ⏭️ Überspringen
+              </button>
+              <button id="btn-vocab-known" class="btn btn-primary" style="flex: 1; background: var(--accent-emerald);">
                 ✅ Gewusst
               </button>
             </div>

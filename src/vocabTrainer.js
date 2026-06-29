@@ -54,6 +54,7 @@ export class VocabTrainerController {
 
     this.btnRepeat = document.getElementById('btn-vocab-repeat');
     this.btnKnown = document.getElementById('btn-vocab-known');
+    this.btnSkip = document.getElementById('btn-vocab-skip');
 
     this.init();
   }
@@ -71,6 +72,9 @@ export class VocabTrainerController {
     
     this.btnRepeat.addEventListener('click', () => this.handleCardResponse(false));
     this.btnKnown.addEventListener('click', () => this.handleCardResponse(true));
+    if (this.btnSkip) {
+      this.btnSkip.addEventListener('click', () => this.handleSkipCard());
+    }
 
     // Keyboard support (Classic flashcard mode only)
     document.addEventListener('keydown', (e) => {
@@ -83,6 +87,8 @@ export class VocabTrainerController {
           this.handleCardResponse(false);
         } else if (e.code === 'ArrowRight' || e.code === 'KeyY' || e.code === 'Enter') {
           this.handleCardResponse(true);
+        } else if (e.code === 'ArrowDown' || e.code === 'KeyS') {
+          this.handleSkipCard();
         }
       }
     });
@@ -225,6 +231,7 @@ export class VocabTrainerController {
       this.cardContainerEl.classList.remove('flipped');
     }
 
+    this.updateBinDistributionUI();
     this.displayActiveMode();
   }
 
@@ -441,8 +448,11 @@ export class VocabTrainerController {
           <button class="mc-option-btn" data-index="${i}">${opt}</button>
         `).join('')}
       </div>
+      <div id="mc-controls-container" style="display: flex; justify-content: center; margin-top: 16px; width: 100%;">
+        <button id="btn-mc-skip" class="btn btn-secondary" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.1); width: 100%; max-width: 280px;">⏭️ Überspringen</button>
+      </div>
       <div id="mc-next-container" style="display:none; text-align: center; margin-top: 10px;">
-        <button id="btn-mc-next" class="btn btn-primary" style="margin: 0 auto;">Nächste Karte ➔</button>
+        <button id="btn-mc-next" class="btn btn-primary" style="margin: 0 auto; width: 100%; max-width: 280px;">Nächste Karte ➔</button>
       </div>
     `;
 
@@ -454,6 +464,12 @@ export class VocabTrainerController {
         this.evaluateMCQAnswer(clickedIdx, buttons);
       });
     });
+
+    // Bind skip button
+    const skipBtn = this.interContainerEl.querySelector('#btn-mc-skip');
+    if (skipBtn) {
+      skipBtn.addEventListener('click', () => this.handleSkipCard());
+    }
   }
 
   evaluateMCQAnswer(clickedIdx, buttons) {
@@ -478,6 +494,10 @@ export class VocabTrainerController {
       buttons[this.mcSelectedIdx].classList.add('correct'); // reveal correct answer
       this.updateLeitnerProgress(this.currentDeck[this.currentIndex], false);
       
+      // Hide skip button when showing review next button
+      const mcControls = document.getElementById('mc-controls-container');
+      if (mcControls) mcControls.style.display = 'none';
+
       // Require user to click 'Next' button to review mistake
       const nextContainer = document.getElementById('mc-next-container');
       nextContainer.style.display = 'block';
@@ -670,6 +690,7 @@ export class VocabTrainerController {
 
     this.appState.vocabProgress[cardKey] = progress;
     this.updateStatsCallback(); // Persist changes to localStorage and refresh stats UI
+    this.updateBinDistributionUI();
   }
 
   // Shared function to increment index and handle end-of-deck scenarios in MC/Classic
@@ -709,6 +730,74 @@ export class VocabTrainerController {
       }, 250);
     } else {
       this.displayActiveMode();
+    }
+  }
+
+  handleSkipCard() {
+    if (this.currentDeck.length === 0) return;
+
+    this.currentIndex++;
+    if (this.currentIndex >= this.currentDeck.length) {
+      this.showToast('⏭️ Einige Karten übersprungen. Lade Stapel neu...');
+      this.reviewAllMode = false;
+      this.filterDueCards();
+      this.currentIndex = 0;
+    }
+
+    if (this.isFlipped) {
+      this.cardContainerEl.classList.remove('flipped');
+      this.isFlipped = false;
+      setTimeout(() => {
+        this.displayActiveMode();
+      }, 250);
+    } else {
+      this.displayActiveMode();
+    }
+  }
+
+  updateBinDistributionUI() {
+    const bins = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+    
+    // Count box levels for cards in the current raw deck
+    for (const card of this.rawDeck) {
+      const prog = this.appState.vocabProgress[card.latin.toLowerCase()];
+      const bin = prog ? prog.bin : 1;
+      bins[bin]++;
+    }
+
+    const total = this.rawDeck.length || 1;
+    
+    // Update labels
+    for (let i = 1; i <= 6; i++) {
+      const el = document.getElementById(`bin-cnt-${i}`);
+      if (el) el.textContent = bins[i];
+    }
+
+    const statsText = document.getElementById('vocab-bin-stats-text');
+    if (statsText) {
+      statsText.textContent = `${this.rawDeck.length} Vokabeln in: ${this.currentDeckName}`;
+    }
+
+    // Render stacked progress bar segments
+    const progressBar = document.getElementById('vocab-bin-progress-bar');
+    if (progressBar) {
+      const colors = {
+        1: '#fca5a5', // red/coral
+        2: '#fed7aa', // orange
+        3: '#fef08a', // yellow
+        4: '#bfdbfe', // blue
+        5: '#c7d2fe', // indigo
+        6: '#a7f3d0'  // emerald green
+      };
+      
+      let html = '';
+      for (let i = 1; i <= 6; i++) {
+        const pct = (bins[i] / total) * 100;
+        if (pct > 0) {
+          html += `<div style="width: ${pct}%; background: ${colors[i]}; transition: width 0.3s ease;"></div>`;
+        }
+      }
+      progressBar.innerHTML = html;
     }
   }
 
