@@ -238,19 +238,41 @@ export class VocabTrainerController {
   filterDueCards() {
     const now = Date.now();
     
+    // Helper to verify if an inflected card's root has been studied sufficiently (Box >= 3)
+    const isUnlocked = (card) => {
+      let rootWord = null;
+      if (card.forms) {
+        const formsClean = card.forms.toLowerCase();
+        if (formsClean.startsWith("form von:")) {
+          rootWord = card.forms.substring(9).trim().toLowerCase();
+        }
+      }
+      
+      if (rootWord) {
+        const rootProgress = this.appState.vocabProgress[rootWord];
+        const rootBin = rootProgress ? rootProgress.bin : 1;
+        if (rootBin < 3) {
+          return false; // Root is not in Box >= 3 yet, lock this inflected form
+        }
+      }
+      return true;
+    };
+
     if (this.reviewAllMode) {
-      // Ignore Leitner review timings; review everything in random order
-      this.currentDeck = [...this.rawDeck];
+      // Respect root dependency constraints even in review-all mode
+      this.currentDeck = this.rawDeck.filter(isUnlocked);
       this.shuffle(this.currentDeck);
       return;
     }
 
-    // Filter cards that are due
+    // Filter cards that are both unlocked (root learned) and due
     this.currentDeck = this.rawDeck.filter(card => {
+      if (!isUnlocked(card)) return false;
+
       const progress = this.appState.vocabProgress[card.latin.toLowerCase()];
-      if (!progress) return true; // new card is due immediately (defaults to Bin 1)
+      if (!progress) return true; // new card is due immediately
       if (progress.bin >= 6) {
-        // Bin 6 holds mastered cards. Let's exclude them from normal daily reviews
+        // Mastered cards are archived
         return false;
       }
       return progress.nextReview <= now;
