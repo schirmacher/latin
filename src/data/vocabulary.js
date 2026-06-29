@@ -258,5 +258,14 @@ export const baseTranslationOverrides = {
   "principium": { translation: "der Anfang / der Beginn", explanation: "Substantiv (2. Deklination, n.)" },
   "tranquillus": { translation: "ruhig / still", explanation: "Adjektiv (a-/o-Deklination)" },
   "unus": { translation: "einer / ein einziger", explanation: "Zahlwort / Adjektiv" },
-  "verbum": { translation: "das Wort", explanation: "Substantiv (2. Deklination, n.)" }
+  "verbum": { translation: "das Wort", explanation: "Substantiv (2. Deklination, n.)" },
+  "ego": { translation: "ich", explanation: "Personalpronomen" },
+  "tu": { translation: "du", explanation: "Personalpronomen" },
+  "hic": { translation: "dieser / diese / dieses", explanation: "Demonstrativpronomen" },
+  "is": { translation: "er / sie / es", explanation: "Personal-/Demonstrativpronomen" },
+  "suus": { translation: "sein / ihr (besitzend)", explanation: "Possessivpronomen" },
+  "ipse": { translation: "selbst / persönlich", explanation: "Intensivpronomen" },
+  "quidam": { translation: "ein gewisser / ein bestimmter", explanation: "Demonstrativpronomen / Indefinitpronomen" },
+  "qui": { translation: "der / welcher", explanation: "Relativpronomen" },
+  "noster": { translation: "unser", explanation: "Possessivpronomen" }
 };
