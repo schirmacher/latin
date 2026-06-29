@@ -31,7 +31,8 @@ class App {
     
     return {
       customVocabulary: [], // Cards added by user: { latin, forms, translation, explanation, custom: true }
-      masteredVocab: [],    // Array of words marked as 'known'
+      vocabProgress: {},    // Map of cardKey -> { bin, lastReviewed, nextReview }
+      masteredVocab: [],    // Deprecated, replaced by vocabProgress
       startedTexts: [],     // Array of text IDs started
       drillsCompleted: 0,   // Count of perfect grammar drills
       courseLevel: 'intermediate' // 'beginner' or 'intermediate'
@@ -429,8 +430,11 @@ Formatierungsanweisung: Formatiere deine Antwort in lesbarem Markdown (nutze ## 
   }
 
   updateStatsUI() {
-    // Mastered vocabulary cards count
-    const vocabCount = this.state.masteredVocab.length;
+    // Mastered vocabulary cards count (Bin 6 / Mastered)
+    let vocabCount = 0;
+    if (this.state.vocabProgress) {
+      vocabCount = Object.values(this.state.vocabProgress).filter(p => p.bin >= 6).length;
+    }
     document.getElementById('stat-vocab-mastered').textContent = vocabCount;
     document.getElementById('dash-vocab-num').textContent = vocabCount;
 

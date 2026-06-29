@@ -240,27 +240,55 @@ export class ReaderController {
       this.appState.customVocabulary = [];
     }
 
-    // Check if card already exists
-    const exists = this.appState.customVocabulary.some(
-      c => c.latin.toLowerCase() === this.selectedWordData.latin.toLowerCase()
-    );
+    // Extract clean lemma root (e.g. "urbs" from "urbs, urbis, f.")
+    const cleanRoot = this.selectedWordData.lemma.split(/[,;\s]/)[0].toLowerCase().trim().replace(/[^a-zāēīōū]/g, '');
+    const inflectedWord = this.selectedWordData.latin.toLowerCase();
 
-    if (exists) {
-      this.showToast('Dieses Wort befindet sich bereits in deinen Vokabeln.');
-      return;
+    let addedRoot = false;
+    let addedForm = false;
+
+    // 1. Add the root (lemma) card if it differs from the inflected form
+    if (cleanRoot && cleanRoot !== inflectedWord) {
+      const rootExists = this.appState.customVocabulary.some(
+        c => c.latin.toLowerCase() === cleanRoot
+      );
+      if (!rootExists) {
+        this.appState.customVocabulary.push({
+          latin: cleanRoot,
+          forms: this.selectedWordData.lemma,
+          translation: this.selectedWordData.translation.split('/')[0].split(';')[0].trim(),
+          explanation: `${this.selectedWordData.pos} (Grundform)`,
+          custom: true
+        });
+        addedRoot = true;
+      }
     }
 
-    // Add to custom vocabulary
-    const newCard = {
-      latin: this.selectedWordData.latin.toLowerCase(),
-      forms: this.selectedWordData.lemma,
-      translation: this.selectedWordData.translation,
-      explanation: `${this.selectedWordData.pos} | ${this.selectedWordData.parse} (Aus: ${this.currentText.title})`,
-      custom: true
-    };
+    // 2. Add the inflected card
+    const formExists = this.appState.customVocabulary.some(
+      c => c.latin.toLowerCase() === inflectedWord
+    );
+    if (!formExists) {
+      this.appState.customVocabulary.push({
+        latin: inflectedWord,
+        forms: cleanRoot ? `Form von: ${cleanRoot}` : this.selectedWordData.lemma,
+        translation: this.selectedWordData.translation,
+        explanation: `${this.selectedWordData.pos} | ${this.selectedWordData.parse} (Aus: ${this.currentText.title})`,
+        custom: true
+      });
+      addedForm = true;
+    }
 
-    this.appState.customVocabulary.push(newCard);
-    this.showToast(`"${this.selectedWordData.latin}" wurde zu deinem Wortschatz hinzugefügt!`);
+    if (addedRoot && addedForm) {
+      this.showToast(`"${inflectedWord}" (Form) & "${cleanRoot}" (Grundform) hinzugefügt!`);
+    } else if (addedForm) {
+      this.showToast(`"${inflectedWord}" wurde zu deinen Vokabeln hinzugefügt!`);
+    } else if (addedRoot) {
+      this.showToast(`Grundform "${cleanRoot}" wurde hinzugefügt!`);
+    } else {
+      this.showToast('Dieses Wort und seine Grundform sind bereits in deinen Vokabeln.');
+    }
+
     this.updateStatsCallback();
   }
 
