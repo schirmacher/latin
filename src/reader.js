@@ -311,10 +311,18 @@ export class ReaderController {
       c => c.latin.toLowerCase() === inflectedWord
     );
     if (!formExists) {
+      let displayTranslation = this.selectedWordData.translation;
+      if (this.selectedWordData.pos.includes("Substantiv") || this.selectedWordData.pos.includes("Adjektiv")) {
+        const caseMatch = this.selectedWordData.parse.match(/(Nominativ|Genitiv|Dativ|Akkusativ|Ablativ|Vokativ)/i);
+        if (caseMatch) {
+          displayTranslation = `${this.selectedWordData.translation} (${caseMatch[0]})`;
+        }
+      }
+
       this.appState.customVocabulary.push({
         latin: inflectedWord,
         forms: cleanRoot ? `Form von: ${cleanRoot}` : this.selectedWordData.lemma,
-        translation: this.selectedWordData.translation,
+        translation: displayTranslation,
         explanation: `${this.selectedWordData.pos} | ${this.selectedWordData.parse} (Aus: ${this.currentText.title})`,
         custom: true
       });

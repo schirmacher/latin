@@ -157,10 +157,19 @@ export class VocabTrainerController {
         const inflectedKey = `form_${inflected.toLowerCase()}`;
         if (inflected.toLowerCase() !== lemmaClean && !addedKeys.has(inflectedKey) && inflected.length > 1) {
           addedKeys.add(inflectedKey);
+
+          let displayTranslation = info.translation;
+          if (info.pos.includes("Substantiv") || info.pos.includes("Adjektiv")) {
+            const caseMatch = info.parse.match(/(Nominativ|Genitiv|Dativ|Akkusativ|Ablativ|Vokativ)/i);
+            if (caseMatch) {
+              displayTranslation = `${info.translation} (${caseMatch[0]})`;
+            }
+          }
+
           perseusCards.push({
             latin: inflected,
             forms: `Form von: ${lemmaClean}`,
-            translation: info.translation,
+            translation: displayTranslation,
             explanation: `${info.pos} | ${info.parse} (Textform)`,
             level: "intermediate"
           });
