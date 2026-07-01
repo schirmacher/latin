@@ -114,7 +114,7 @@ export class VocabTrainerController {
     const perseusCards = [];
     const addedKeys = new Set();
 
-    const formatNounTranslation = (translation, genderStr, caseStr, baseTranslation = "") => {
+    const formatNounTranslation = (translation, genderStr, caseStr, baseTranslation = "", lemmaTranslation = "") => {
       if (!caseStr) return translation;
 
       if (translation.includes("/")) {
@@ -122,7 +122,7 @@ export class VocabTrainerController {
         const baseTerms = baseTranslation ? baseTranslation.split("/") : [];
         const formatted = terms.map((t, idx) => {
           const bT = baseTerms[idx] || baseTerms[0] || "";
-          return formatNounTranslation(t.trim(), genderStr, caseStr, bT.trim());
+          return formatNounTranslation(t.trim(), genderStr, caseStr, bT.trim(), lemmaTranslation);
         });
         return formatted.join(" / ");
       }
@@ -140,7 +140,18 @@ export class VocabTrainerController {
       }
       
       let isFem = false, isMasc = false, isNeut = false;
-      if (baseTranslation) {
+      if (lemmaTranslation) {
+        const ltClean = lemmaTranslation.replace(/^(der|die|das|des|dem|den)\s+/i, '').trim().toLowerCase();
+        const ltWords = ltClean.split(/[^a-zA-Zäöüß]+/);
+        if (ltWords.includes(clean.toLowerCase())) {
+          const lemmaLower = lemmaTranslation.toLowerCase().trim();
+          if (lemmaLower.startsWith("die ")) isFem = true;
+          else if (lemmaLower.startsWith("der ")) isMasc = true;
+          else if (lemmaLower.startsWith("das ")) isNeut = true;
+        }
+      }
+      
+      if (!isFem && !isMasc && !isNeut && baseTranslation) {
         let matchingBase = baseTranslation;
         if (baseTranslation.includes("/")) {
           const baseTerms = baseTranslation.split("/");
@@ -220,7 +231,7 @@ export class VocabTrainerController {
 
           // Append Nominativ suffix for nouns and adjectives to make it clear they are base forms
           if (info.pos.includes("Substantiv") || info.pos.includes("Adjektiv")) {
-            baseTranslation = formatNounTranslation(baseTranslation, info.lemma, "Nominativ", baseTranslation);
+            baseTranslation = formatNounTranslation(baseTranslation, info.lemma, "Nominativ", baseTranslation, info.lemmaTranslation);
             if (!baseTranslation.includes("(") && !baseTranslation.includes("Nominativ")) {
               baseTranslation = `${baseTranslation} (Nominativ)`;
             }
@@ -246,7 +257,7 @@ export class VocabTrainerController {
             if (caseMatch) {
               const georgesEntry = georgesDictionary[lemmaClean];
               let baseTrans = (georgesEntry && georgesEntry.translation && !georgesEntry.translation.includes("Kein detaillierter Eintrag")) ? georgesEntry.translation : (info.lemmaTranslation || info.translation);
-              let nounTrans = formatNounTranslation(info.translation, info.lemma, info.parse, baseTrans);
+              let nounTrans = formatNounTranslation(info.translation, info.lemma, info.parse, baseTrans, info.lemmaTranslation);
               displayTranslation = `${nounTrans} (${caseMatch[0]})`;
             }
           } else if (info.pos.includes("Verb")) {

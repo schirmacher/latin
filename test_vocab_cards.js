@@ -88,12 +88,12 @@ const testCases = [
   },
   {
     latin: "appellare",
-    assertion: (card) => card.translation === "ansprechen, anreden",
+    assertion: (card) => card.translation.includes("ansprechen, anreden"),
     description: "Verb 'appellare' skips etymological literal meaning to resolve correctly"
   },
   {
     latin: "velle",
-    assertion: (card) => card.translation === "willens sein, begehren, wünschen",
+    assertion: (card) => card.translation.includes("willens sein, begehren, wünschen"),
     description: "Verb 'velle' resolves homonym 'volo' to 'want' rather than 'fly'"
   },
   // Proper noun check
@@ -129,6 +129,17 @@ const testCases = [
     latin: "nepotem",
     assertion: (card) => card.translation.toLowerCase() === "den enkel (akkusativ)",
     description: "Inflected card 'nepotem' resolves gender correctly to 'den enkel (Akkusativ)'"
+  },
+  // Puer / puerum check
+  {
+    latin: "puer",
+    assertion: (card) => card.translation.includes("der Junge") && card.translation.includes("das Kind"),
+    description: "Lemma card for 'puer' has both 'der Junge' and 'das Kind'"
+  },
+  {
+    latin: "puerum",
+    assertion: (card) => card.translation.toLowerCase() === "den jungen (akkusativ)",
+    description: "Inflected card 'puerum' resolves gender correctly to 'den jungen (Akkusativ)'"
   }
 ];
 

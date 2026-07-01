@@ -268,6 +268,11 @@ for clean_lemma, info in lemma_to_info.items():
             extracted_trans = clean_html_translation(html_content, candidates, is_noun)
             if not extracted_trans:
                 extracted_trans = info['lemma_translation'] if info['lemma_translation'] else info['translation']
+            elif info['lemma_translation']:
+                lt_clean = re.sub(r'^(der|die|das|den|dem|des)\s+', '', info['lemma_translation'].lower()).strip()
+                et_clean = extracted_trans.lower()
+                if lt_clean not in et_clean:
+                    extracted_trans = f"{info['lemma_translation']} / {extracted_trans}"
     else:
         not_found.append(clean_lemma)
         html_content = f"<p>Kein detaillierter Eintrag für <b>{clean_lemma}</b> im Georges Handwörterbuch gefunden.</p>"
