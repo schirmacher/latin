@@ -34,6 +34,7 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   overflow: hidden;
   line-height: 1.6;
@@ -44,6 +45,7 @@ body {
   display: flex;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
 }
 
 /* Sidebar Navigation */
@@ -171,7 +173,7 @@ body {
   height: 38px;
   font-size: 18px;
   cursor: pointer;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   transition: var(--transition-smooth);
@@ -1075,6 +1077,7 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   background: rgba(11, 13, 25, 0.7);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -1190,8 +1193,8 @@ body {
   color: #c7d2fe;
 }
 
-/* --- Mobile Responsiveness (max-width: 768px) --- */
-@media (max-width: 768px) {
+/* --- Mobile & Tablet Responsiveness (max-width: 1024px) --- */
+@media (max-width: 1024px) {
   body {
     flex-direction: column;
     overflow: hidden; /* Prevent body scrolling */
@@ -1200,6 +1203,7 @@ body {
   #app {
     flex-direction: column;
     height: 100vh;
+    height: 100dvh;
     width: 100vw;
     overflow: hidden;
   }
@@ -1210,6 +1214,7 @@ body {
     top: 0;
     left: 0;
     height: 100vh;
+    height: 100dvh;
     width: 280px;
     z-index: 1001; /* Above backdrop and reader drawer */
     transform: translateX(-100%);
@@ -1284,6 +1289,7 @@ body {
   .main-content {
     padding-bottom: 0px; /* No bottom nav */
     height: calc(100vh - 52px);
+    height: calc(100dvh - 52px);
     width: 100vw;
     overflow-y: auto;
   }
@@ -1322,7 +1328,7 @@ body {
   }
 
   .view-container {
-    padding: 16px;
+    padding: 16px 16px 88px 16px;
   }
 
   /* Dashboard Grid */
