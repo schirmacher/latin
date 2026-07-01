@@ -189,8 +189,14 @@ export class VocabTrainerController {
         if (!addedKeys.has(rootKey) && lemmaClean.length > 0) {
           addedKeys.add(rootKey);
 
-          // Use lemmaTranslation if available, otherwise fall back to first translation token
-          let baseTranslation = info.lemmaTranslation || info.translation.split('/')[0].split(';')[0].trim();
+          // Prioritize Georges dictionary translation for the lemma card, then info.lemmaTranslation, then fallback
+          let baseTranslation = "";
+          const georgesEntry = georgesDictionary[lemmaClean];
+          if (georgesEntry && georgesEntry.translation && !georgesEntry.translation.includes("Kein detaillierter Eintrag")) {
+            baseTranslation = georgesEntry.translation;
+          } else {
+            baseTranslation = info.lemmaTranslation || info.translation.split('/')[0].split(';')[0].trim();
+          }
           let baseExplanation = `${info.pos} (Grundform)`;
 
           const staticCard = this.findStaticVocabCard(lemmaClean);
@@ -226,7 +232,8 @@ export class VocabTrainerController {
           if (info.pos.includes("Substantiv") || info.pos.includes("Adjektiv")) {
             const caseMatch = info.parse.match(/(Nominativ|Genitiv|Dativ|Akkusativ|Ablativ|Vokativ)/i);
             if (caseMatch) {
-              let baseTrans = info.lemmaTranslation || info.translation;
+              const georgesEntry = georgesDictionary[lemmaClean];
+              let baseTrans = (georgesEntry && georgesEntry.translation && !georgesEntry.translation.includes("Kein detaillierter Eintrag")) ? georgesEntry.translation : (info.lemmaTranslation || info.translation);
               let nounTrans = formatNounTranslation(info.translation, info.lemma, info.parse, baseTrans);
               displayTranslation = `${nounTrans} (${caseMatch[0]})`;
             }

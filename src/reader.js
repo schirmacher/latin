@@ -367,7 +367,13 @@ export class ReaderController {
         c => c.latin.toLowerCase() === cleanRoot
       );
       if (!rootExists) {
-        let baseTranslation = this.selectedWordData.lemmaTranslation || this.selectedWordData.translation.split('/')[0].split(';')[0].trim();
+        let baseTranslation = "";
+        const georgesEntry = georgesDictionary[cleanRoot];
+        if (georgesEntry && georgesEntry.translation && !georgesEntry.translation.includes("Kein detaillierter Eintrag")) {
+          baseTranslation = georgesEntry.translation;
+        } else {
+          baseTranslation = this.selectedWordData.lemmaTranslation || this.selectedWordData.translation.split('/')[0].split(';')[0].trim();
+        }
         let baseExplanation = `${this.selectedWordData.pos} (Grundform)`;
 
         const staticCard = findStaticVocabCard(cleanRoot);
@@ -405,7 +411,8 @@ export class ReaderController {
       if (this.selectedWordData.pos.includes("Substantiv") || this.selectedWordData.pos.includes("Adjektiv")) {
         const caseMatch = this.selectedWordData.parse.match(/(Nominativ|Genitiv|Dativ|Akkusativ|Ablativ|Vokativ)/i);
         if (caseMatch) {
-          let baseTrans = this.selectedWordData.lemmaTranslation || this.selectedWordData.translation;
+          const georgesEntry = georgesDictionary[cleanRoot];
+          let baseTrans = (georgesEntry && georgesEntry.translation && !georgesEntry.translation.includes("Kein detaillierter Eintrag")) ? georgesEntry.translation : (this.selectedWordData.lemmaTranslation || this.selectedWordData.translation);
           let nounTrans = formatNounTranslation(this.selectedWordData.translation, this.selectedWordData.lemma, this.selectedWordData.parse, baseTrans);
           displayTranslation = `${nounTrans} (${caseMatch[0]})`;
         }
@@ -498,7 +505,9 @@ export class ReaderController {
 
         if (wordData.pos.includes("Substantiv") || wordData.pos.includes("Adjektiv")) {
           const caseMatch = wordData.parse.match(/(Nominativ|Genitiv|Dativ|Akkusativ|Ablativ|Vokativ)/i);
-          let baseTrans = wordData.lemmaTranslation || wordData.translation;
+          const cleanRoot = wordData.lemma.split(/[,;\s]/)[0].toLowerCase().trim().replace(/[^a-zāēīōū]/g, '');
+          const georgesEntry = georgesDictionary[cleanRoot];
+          let baseTrans = (georgesEntry && georgesEntry.translation && !georgesEntry.translation.includes("Kein detaillierter Eintrag")) ? georgesEntry.translation : (wordData.lemmaTranslation || wordData.translation);
           if (caseMatch) {
             let nounTrans = formatNounTranslation(wordData.translation, wordData.lemma, wordData.parse, baseTrans);
             baseTranslation = `${nounTrans} (${caseMatch[0]})`;
