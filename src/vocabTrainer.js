@@ -141,7 +141,19 @@ export class VocabTrainerController {
       
       let isFem = false, isMasc = false, isNeut = false;
       if (baseTranslation) {
-        const baseLower = baseTranslation.toLowerCase().trim();
+        let matchingBase = baseTranslation;
+        if (baseTranslation.includes("/")) {
+          const baseTerms = baseTranslation.split("/");
+          const match = baseTerms.find(t => {
+            const termClean = t.replace(/^(der|die|das|des|dem|den)\s+/i, '').trim().toLowerCase();
+            const termWords = termClean.split(/[^a-zA-Zäöüß]+/);
+            return termWords.includes(clean.toLowerCase());
+          });
+          if (match) {
+            matchingBase = match.trim();
+          }
+        }
+        const baseLower = matchingBase.toLowerCase().trim();
         if (baseLower.startsWith("die ")) isFem = true;
         else if (baseLower.startsWith("der ")) isMasc = true;
         else if (baseLower.startsWith("das ")) isNeut = true;

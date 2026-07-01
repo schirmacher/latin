@@ -110,15 +110,20 @@ def clean_html_translation(html, candidates, is_noun=False):
     # ONLY run this if it is a noun (or proper name)
     if is_noun:
         pattern = r'\b(der|die|das|den|dem|des|jede|jede|ein|eine)\b\s*(?:</i>)?\s*(?:<i>)?\s*<b[^>]*>(.*?)</b>'
-        matches = re.finditer(pattern, html_clean, re.IGNORECASE)
+        matches = re.finditer(pattern, html_clean[:500], re.IGNORECASE)
+        found_nouns = []
+        seen_words = set()
         for match in matches:
             art = match.group(1).lower()
             word = re.sub(r'<[^>]+>', '', match.group(2)).strip(',; ')
             word_clean = re.sub(r'[^a-zäöüß]', '', strip_macrons(word))
             if word_clean in cands_clean:
                 continue
-            if len(word) > 2:
-                return f"{art} {word}"
+            if len(word) > 2 and word_clean not in seen_words:
+                found_nouns.append(f"{art} {word}")
+                seen_words.add(word_clean)
+        if found_nouns:
+            return " / ".join(found_nouns)
         
     # Fallback to first bold segment
     bold_matches = []

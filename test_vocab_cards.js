@@ -118,6 +118,17 @@ const testCases = [
     latin: "maximus",
     assertion: (card) => card.translation.toLowerCase() === "der größte (nominativ)",
     description: "Adjective 'maximus' uses correctly formatted comparative/superlative base form translation"
+  },
+  // Nepos / nepotem check
+  {
+    latin: "nepos",
+    assertion: (card) => card.translation.includes("der Enkel") && card.translation.includes("das Enkelkind"),
+    description: "Lemma card for 'nepos' has both 'der Enkel' and 'das Enkelkind'"
+  },
+  {
+    latin: "nepotem",
+    assertion: (card) => card.translation.toLowerCase() === "den enkel (akkusativ)",
+    description: "Inflected card 'nepotem' resolves gender correctly to 'den enkel (Akkusativ)'"
   }
 ];
 
