@@ -1,5 +1,5 @@
 import { texts } from './data/texts.js';
-import { vocabularyDecks, baseTranslationOverrides } from './data/vocabulary.js';
+import { vocabularyDecks } from './data/vocabulary.js';
 import { georgesDictionary } from './data/dictionary.js';
 const formatNounTranslation = (translation, genderStr, caseStr, baseTranslation = "") => {
   if (!caseStr) return translation;
@@ -63,9 +63,6 @@ const formatNounTranslation = (translation, genderStr, caseStr, baseTranslation 
 
 const findStaticVocabCard = (latinWord) => {
   const clean = latinWord.toLowerCase().trim();
-  if (baseTranslationOverrides[clean]) {
-    return baseTranslationOverrides[clean];
-  }
   for (const deck of vocabularyDecks) {
     const card = deck.cards.find(c => c.latin.toLowerCase() === clean);
     if (card) return card;
@@ -250,6 +247,7 @@ export class ReaderController {
       this.selectedWordData = {
         latin: wordEl.textContent.trim().replace(/[,;.:!?()\-]/g, ''),
         lemma: wordData.lemma,
+        lemmaTranslation: wordData.lemmaTranslation,
         pos: wordData.pos,
         parse: wordData.parse,
         translation: wordData.translation
@@ -369,12 +367,11 @@ export class ReaderController {
         c => c.latin.toLowerCase() === cleanRoot
       );
       if (!rootExists) {
-        let baseTranslation = this.selectedWordData.translation.split('/')[0].split(';')[0].trim();
+        let baseTranslation = this.selectedWordData.lemmaTranslation || this.selectedWordData.translation.split('/')[0].split(';')[0].trim();
         let baseExplanation = `${this.selectedWordData.pos} (Grundform)`;
 
         const staticCard = findStaticVocabCard(cleanRoot);
         if (staticCard) {
-          baseTranslation = staticCard.translation;
           if (staticCard.explanation) {
             baseExplanation = staticCard.explanation;
           }
@@ -408,13 +405,7 @@ export class ReaderController {
       if (this.selectedWordData.pos.includes("Substantiv") || this.selectedWordData.pos.includes("Adjektiv")) {
         const caseMatch = this.selectedWordData.parse.match(/(Nominativ|Genitiv|Dativ|Akkusativ|Ablativ|Vokativ)/i);
         if (caseMatch) {
-          let baseTrans = "";
-          const staticCard = findStaticVocabCard(cleanRoot);
-          if (staticCard) {
-            baseTrans = staticCard.translation;
-          } else {
-            baseTrans = this.selectedWordData.translation;
-          }
+          let baseTrans = this.selectedWordData.lemmaTranslation || this.selectedWordData.translation;
           let nounTrans = formatNounTranslation(this.selectedWordData.translation, this.selectedWordData.lemma, this.selectedWordData.parse, baseTrans);
           displayTranslation = `${nounTrans} (${caseMatch[0]})`;
         }
@@ -507,15 +498,7 @@ export class ReaderController {
 
         if (wordData.pos.includes("Substantiv") || wordData.pos.includes("Adjektiv")) {
           const caseMatch = wordData.parse.match(/(Nominativ|Genitiv|Dativ|Akkusativ|Ablativ|Vokativ)/i);
-          // Find base translation to determine gender
-          let baseTrans = "";
-          const cleanRoot = wordData.lemma.split(/[,;\s]/)[0].toLowerCase().trim().replace(/[^a-zāēīōū]/g, '');
-          const staticCard = findStaticVocabCard(cleanRoot);
-          if (staticCard) {
-            baseTrans = staticCard.translation;
-          } else {
-            baseTrans = wordData.translation;
-          }
+          let baseTrans = wordData.lemmaTranslation || wordData.translation;
           if (caseMatch) {
             let nounTrans = formatNounTranslation(wordData.translation, wordData.lemma, wordData.parse, baseTrans);
             baseTranslation = `${nounTrans} (${caseMatch[0]})`;

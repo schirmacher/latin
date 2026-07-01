@@ -1,4 +1,4 @@
-import { vocabularyDecks, baseTranslationOverrides } from './data/vocabulary.js';
+import { vocabularyDecks } from './data/vocabulary.js';
 import { texts } from './data/texts.js';
 import { georgesDictionary } from './data/dictionary.js';
 
@@ -99,9 +99,6 @@ export class VocabTrainerController {
 
   findStaticVocabCard(latinWord) {
     const cleanWord = latinWord.toLowerCase().trim();
-    if (baseTranslationOverrides[cleanWord]) {
-      return baseTranslationOverrides[cleanWord];
-    }
     if (georgesDictionary[cleanWord]) {
       return georgesDictionary[cleanWord];
     }
@@ -192,13 +189,12 @@ export class VocabTrainerController {
         if (!addedKeys.has(rootKey) && lemmaClean.length > 0) {
           addedKeys.add(rootKey);
 
-          // Look up base translation in vocabulary decks if available
-          let baseTranslation = info.translation.split('/')[0].split(';')[0].trim();
+          // Use lemmaTranslation if available, otherwise fall back to first translation token
+          let baseTranslation = info.lemmaTranslation || info.translation.split('/')[0].split(';')[0].trim();
           let baseExplanation = `${info.pos} (Grundform)`;
 
           const staticCard = this.findStaticVocabCard(lemmaClean);
           if (staticCard) {
-            baseTranslation = staticCard.translation;
             if (staticCard.explanation) {
               baseExplanation = staticCard.explanation;
             }
@@ -230,13 +226,7 @@ export class VocabTrainerController {
           if (info.pos.includes("Substantiv") || info.pos.includes("Adjektiv")) {
             const caseMatch = info.parse.match(/(Nominativ|Genitiv|Dativ|Akkusativ|Ablativ|Vokativ)/i);
             if (caseMatch) {
-              let baseTrans = "";
-              const staticCard = this.findStaticVocabCard(lemmaClean);
-              if (staticCard) {
-                baseTrans = staticCard.translation;
-              } else {
-                baseTrans = info.translation;
-              }
+              let baseTrans = info.lemmaTranslation || info.translation;
               let nounTrans = formatNounTranslation(info.translation, info.lemma, info.parse, baseTrans);
               displayTranslation = `${nounTrans} (${caseMatch[0]})`;
             }

@@ -35,7 +35,7 @@ Das Lateinische teilt Wörter in folgende Klassen ein:
 
 Beim Laden oder Einlesen eines lateinischen Textes läuft die Vokabelgenerierung nach folgenden Schritten ab:
 
-### Regel 2.1: Wortextraktion & Bereinigung
+### Regel 2.1: Wortextraktion & Bereinigung[analysis_code_review.md](analysis_code_review.md)
 1. Der Text wird in einzelne Wort-Token zerlegt.
 2. Satzzeichen werden entfernt, alle Wörter werden in Kleinbuchstaben umgewandelt.
 
@@ -98,9 +98,9 @@ Um die Zuverlässigkeit und Fehlerfreiheit der Vokabelkarten zu garantieren, unt
 ### 5.2 Die kurzen Übersetzungen (Vorder- und Rückseiten-Label)
 Für die kurzen Bezeichnungen im Vokabeltrainer (z. B. für Multiple Choice oder Schnellsuchen) wird folgende Priorisierung angewendet:
 1. **Klasse 1: Manuelle Kuratierung (Menschliche Wahrheit)**
-   * Manuell gepflegte Einträge in `baseTranslationOverrides` und statischen Decks (z. B. *puer* ➜ *"der Junge"*, *timere* ➜ *"fürchten"*). Dies sind feste, fehlerfreie Wahrheiten.
-2. **Klasse 2: Lexikalisches Fallback (Text-Lexikon)**
-   * Liegt kein manueller Eintrag vor, greift das System auf das Vokabelverzeichnis in `texts.js` zurück. Da dieses Verzeichnis ursprünglich KI-unterstützt erstellt wurde, können hier vereinzelt Tense- oder Kasusmängel auftreten, bis wir sie manuell in die Klasse 1 überführen.
+   * Manuell gepflegte Einträge im Text-Lexikon unter `lemmaTranslation` (in `texts.js`) und in den statischen Decks (z. B. *puer* ➜ *"der Junge"*, *timere* ➜ *"fürchten"*). Dies sind feste, fehlerfreie Wahrheiten.
+2. **Klasse 2: Lexikalisches Fallback (Kontext-Übersetzung)**
+   * Liegt kein expliziter `lemmaTranslation`-Wert vor, greift das System auf das kontextuelle Vokabelverzeichnis (`translation`) in `texts.js` zurück.
 3. **Klasse 3: Algorithmische Ableitung (Grammatik-Anpassung)**
    * Die grammatikalischen Ergänzungen für Flexionskarten (z. B. das Hinzufügen von Personalpronomen wie *"er/sie/es"* bei Verben oder Kasus-Endungen wie `(Akkusativ)` bei Substantiven) werden auf Basis der im Text hinterlegten Grammatik-Tags algorithmisch erzeugt (z. B. Grundform *"schlafen"* + 3. Person Plural Imperfekt Indikativ Aktiv ➜ *"sie schliefen"*).
 
