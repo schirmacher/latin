@@ -265,6 +265,61 @@ class App {
       settingsModal.style.display = 'none';
     });
 
+    // Review Modal open/close
+    const reviewModal = document.getElementById('review-modal');
+    document.getElementById('btn-open-review').addEventListener('click', () => {
+      if (this.vocabTrainerController) {
+        // Dynamically recreate the cards from the Perseus deck following the updated rules
+        const pDeck = this.vocabTrainerController.getPerseusDeck();
+        const cards = pDeck ? pDeck.cards : [];
+        
+        const grid = document.getElementById('review-cards-grid');
+        if (grid) {
+          grid.innerHTML = cards.map(c => `
+            <div class="glass-card" style="padding: 12px 16px; border: 1px solid rgba(255, 255, 255, 0.08); display: flex; flex-direction: column; gap: 4px; background: rgba(30, 41, 59, 0.4);">
+              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 6px;">
+                <strong style="color: var(--accent-indigo); font-size: 15px;">${c.latin}</strong>
+                <span style="font-size: 10px; color: var(--text-muted); background: rgba(255, 255, 255, 0.04); padding: 2px 6px; border-radius: 4px;">
+                  ${c.forms && c.forms.startsWith('Form von:') ? 'Flexions-Form' : 'Grundform'}
+                </span>
+              </div>
+              <div style="font-size: 13px; color: var(--text-primary); font-weight: 500; margin-top: 4px;">
+                ${c.translation}
+              </div>
+              <div style="font-size: 11px; color: var(--text-secondary); font-style: italic;">
+                ${c.explanation}
+              </div>
+            </div>
+          `).join('');
+        }
+        
+        const countEl = document.getElementById('review-cards-count');
+        if (countEl) {
+          countEl.textContent = `${cards.length} Karten`;
+        }
+      }
+      reviewModal.style.display = 'flex';
+    });
+
+    document.getElementById('btn-close-review').addEventListener('click', () => {
+      reviewModal.style.display = 'none';
+    });
+
+    document.getElementById('btn-reset-vocab-debug').addEventListener('click', () => {
+      if (confirm('Bist du sicher, dass du deinen Lernfortschritt und alle benutzerdefinierten Vokabeln zurücksetzen willst?')) {
+        this.state.customVocabulary = [];
+        this.state.vocabProgress = {};
+        this.saveState();
+        this.updateStatsUI();
+        if (this.vocabTrainerController) {
+          this.vocabTrainerController.populateDecks();
+          this.vocabTrainerController.loadSelectedDeck();
+        }
+        this.showToast('Lernfortschritt zurückgesetzt!');
+        document.getElementById('btn-open-review').click(); // refresh list
+      }
+    });
+
     // Close AI modal
     document.getElementById('btn-close-ai').addEventListener('click', () => {
       aiModal.style.display = 'none';

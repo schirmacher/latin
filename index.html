@@ -83,7 +83,10 @@
         </div>
 
         <div class="sidebar-footer">
-          <button id="btn-open-settings" class="btn btn-secondary" style="width: 100%; margin-bottom: 12px; font-size: 13px; justify-content: center;">
+          <button id="btn-open-review" class="btn btn-secondary" style="width: 100%; margin-bottom: 8px; font-size: 13px; justify-content: center; background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.25); color: #c7d2fe; gap: 6px;">
+            🔍 Karten-Review (Debug)
+          </button>
+          <button id="btn-open-settings" class="btn btn-secondary" style="width: 100%; margin-bottom: 12px; font-size: 13px; justify-content: center; gap: 6px;">
             ⚙️ Einstellungen
           </button>
           <p>Latein Lern-Begleiter v1.0</p>
@@ -418,6 +421,28 @@
         </div>
         <div class="modal-body" id="ai-modal-body" style="max-height: 500px; overflow-y: auto;">
           <!-- Loaded dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Review Modal (Debug) -->
+    <div id="review-modal" class="modal-overlay" style="display: none;">
+      <div class="glass-card modal-card" style="max-width: 900px; width: 95%; max-height: 85vh; display: flex; flex-direction: column;">
+        <div class="modal-header" style="flex-shrink: 0; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;">🔍 Karten-Review (Debug-Übersicht)</h3>
+          <button class="modal-close" id="btn-close-review" style="background: none; border: none; font-size: 24px; color: var(--text-muted); cursor: pointer;">×</button>
+        </div>
+        <div style="padding: 10px 0; font-size: 12px; color: var(--text-secondary); border-bottom: 1px solid var(--border-color); flex-shrink: 0; display: flex; justify-content: space-between; align-items: center;">
+          <span>Hier sind alle Vokabelkarten mit Vorder- und Rückseite im 2-Spalten-Raster aufgelistet.</span>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <button id="btn-reset-vocab-debug" class="btn btn-danger" style="font-size: 11px; padding: 4px 10px; height: auto; border-radius: var(--border-radius-sm);">💥 Reset Progress</button>
+            <span id="review-cards-count" style="font-weight: 600; color: var(--accent-indigo);">0 Karten</span>
+          </div>
+        </div>
+        <div class="modal-body" id="review-modal-body" style="overflow-y: auto; flex-grow: 1; padding: 20px 0;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;" id="review-cards-grid">
+            <!-- Dynamisch geladen -->
+          </div>
         </div>
       </div>
     </div>

@@ -144,6 +144,13 @@ export class VocabTrainerController {
             }
           }
 
+          // Append Nominativ suffix for nouns and adjectives to make it clear they are base forms
+          if (info.pos.includes("Substantiv") || info.pos.includes("Adjektiv")) {
+            if (!baseTranslation.includes("(") && !baseTranslation.includes("Nominativ")) {
+              baseTranslation = `${baseTranslation} (Nominativ)`;
+            }
+          }
+
           perseusCards.push({
             latin: lemmaClean,
             forms: info.lemma,
@@ -163,6 +170,37 @@ export class VocabTrainerController {
             const caseMatch = info.parse.match(/(Nominativ|Genitiv|Dativ|Akkusativ|Ablativ|Vokativ)/i);
             if (caseMatch) {
               displayTranslation = `${info.translation} (${caseMatch[0]})`;
+            }
+          } else if (info.pos.includes("Verb")) {
+            const parseLower = info.parse.toLowerCase();
+            let pronoun = "";
+            if (parseLower.includes("1. person singular") || parseLower.includes("1. pers. sg.")) {
+              pronoun = "ich";
+            } else if (parseLower.includes("2. person singular") || parseLower.includes("2. pers. sg.")) {
+              pronoun = "du";
+            } else if (parseLower.includes("3. person singular") || parseLower.includes("3. pers. sg.")) {
+              pronoun = "er/sie/es";
+            } else if (parseLower.includes("1. person plural") || parseLower.includes("1. pers. pl.")) {
+              pronoun = "wir";
+            } else if (parseLower.includes("2. person plural") || parseLower.includes("2. pers. pl.")) {
+              pronoun = "ihr";
+            } else if (parseLower.includes("3. person plural") || parseLower.includes("3. pers. pl.")) {
+              pronoun = "sie";
+            }
+            
+            if (pronoun) {
+              const transLower = displayTranslation.toLowerCase();
+              const alreadyHas = transLower.startsWith("ich ") ||
+                                 transLower.startsWith("du ") ||
+                                 transLower.startsWith("er ") ||
+                                 transLower.startsWith("sie ") ||
+                                 transLower.startsWith("es ") ||
+                                 transLower.startsWith("wir ") ||
+                                 transLower.startsWith("ihr ") ||
+                                 transLower.startsWith("er/sie/es ");
+              if (!alreadyHas) {
+                displayTranslation = `${pronoun} ${displayTranslation}`;
+              }
             }
           }
 
