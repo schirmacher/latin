@@ -112,8 +112,8 @@ export class VocabTrainerController {
     return null;
   }
 
-  // Scrapes all text segments from local texts and creates a dynamic Perseus deck
-  getPerseusDeck() {
+  // Scrapes specific text segments from local texts and creates a dynamic Perseus deck
+  getPerseusDeckForChapters(ids, deckId, deckName) {
     const perseusCards = [];
     const addedKeys = new Set();
 
@@ -177,8 +177,8 @@ export class VocabTrainerController {
       return `${article} ${clean}`;
     };
 
-    // Retrieve all chapters beginning with 'fabulae_faciles' (Perseus)
-    const perseusTexts = texts.filter(t => t.id.startsWith('fabulae_faciles'));
+    // Retrieve selected chapters
+    const perseusTexts = texts.filter(t => ids.includes(t.id));
     
     for (const text of perseusTexts) {
       if (!text.lexicon) continue;
@@ -285,12 +285,28 @@ export class VocabTrainerController {
     }
     
     return {
-      id: "perseus_all",
-      name: "Stapel: Perseus (Alle Formen)",
-      description: "Enthält sowohl alle Grundwörter als auch konjugierte/deklinierte Formen aus der Perseus-Geschichte.",
+      id: deckId,
+      name: deckName,
+      description: `Enthält sowohl alle Grundwörter als auch konjugierte/deklinierte Formen aus der Perseus-Geschichte (${deckName}).`,
       level: "intermediate",
       cards: perseusCards
     };
+  }
+
+  getPerseusDeck() {
+    return this.getPerseusDeckForChapters(
+      ['fabulae_faciles_1', 'fabulae_faciles_2', 'fabulae_faciles_3'],
+      'perseus_1_3',
+      'Stapel: Perseus (Kapitel 1 - 3)'
+    );
+  }
+
+  getPerseus4To6Deck() {
+    return this.getPerseusDeckForChapters(
+      ['fabulae_faciles_4', 'fabulae_faciles_5', 'fabulae_faciles_6'],
+      'perseus_4_6',
+      'Stapel: Perseus (Kapitel 4 - 6)'
+    );
   }
 
   populateDecks() {
@@ -302,10 +318,13 @@ export class VocabTrainerController {
       .map(d => `<option value="${d.id}">${d.name} (${d.cards.length} Karten)</option>`)
       .join('');
 
-    // Pre-filled dynamic Perseus Deck (only for intermediate level)
+    // Pre-filled dynamic Perseus Decks (only for intermediate level)
     if (level === 'intermediate') {
-      const pDeck = this.getPerseusDeck();
-      optionsHtml = `<option value="${pDeck.id}">${pDeck.name} (${pDeck.cards.length} Karten)</option>` + optionsHtml;
+      const pDeck1 = this.getPerseusDeck();
+      const pDeck2 = this.getPerseus4To6Deck();
+      optionsHtml = `<option value="${pDeck1.id}">${pDeck1.name} (${pDeck1.cards.length} Karten)</option>` + 
+                    `<option value="${pDeck2.id}">${pDeck2.name} (${pDeck2.cards.length} Karten)</option>` + 
+                    optionsHtml;
     }
 
     // Custom user added deck
@@ -322,8 +341,12 @@ export class VocabTrainerController {
       const customWords = this.appState.customVocabulary || [];
       this.rawDeck = [...customWords];
       this.currentDeckName = 'Eigene Vokabeln';
-    } else if (deckId === 'perseus_all') {
+    } else if (deckId === 'perseus_1_3') {
       const pDeck = this.getPerseusDeck();
+      this.rawDeck = [...pDeck.cards];
+      this.currentDeckName = pDeck.name;
+    } else if (deckId === 'perseus_4_6') {
+      const pDeck = this.getPerseus4To6Deck();
       this.rawDeck = [...pDeck.cards];
       this.currentDeckName = pDeck.name;
     } else {

@@ -269,9 +269,13 @@ class App {
     const reviewModal = document.getElementById('review-modal');
     document.getElementById('btn-open-review').addEventListener('click', () => {
       if (this.vocabTrainerController) {
-        // Dynamically recreate the cards from the Perseus deck following the updated rules
-        const pDeck = this.vocabTrainerController.getPerseusDeck();
-        const cards = pDeck ? pDeck.cards : [];
+        // Dynamically recreate the cards from the Perseus decks following the updated rules
+        const pDeck1 = this.vocabTrainerController.getPerseusDeck();
+        const pDeck2 = this.vocabTrainerController.getPerseus4To6Deck();
+        const cards = [
+          ...(pDeck1 ? pDeck1.cards : []),
+          ...(pDeck2 ? pDeck2.cards : [])
+        ];
         
         const grid = document.getElementById('review-cards-grid');
         if (grid) {
