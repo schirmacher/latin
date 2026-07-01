@@ -132,6 +132,11 @@ def clean_html_translation(html, candidates, is_noun=False):
         if word_clean in cands_clean or len(content_clean) <= 2:
             continue
             
+        # Check if preceded by "also" or "gleichs." indicating etymological literal meaning
+        preceding = html_clean[max(0, match.start() - 25):match.start()].lower()
+        if "also" in preceding or "gleichs." in preceding:
+            continue
+            
         bold_matches.append({
             'start': match.start(),
             'end': match.end(),
@@ -150,6 +155,10 @@ def clean_html_translation(html, candidates, is_noun=False):
         between_text = html_clean[last_end:next_match['start']]
         between_clean = re.sub(r'<[^>]+>', '', between_text).strip()
         
+        # Avoid merging across Roman numeral markers
+        if "I)" in between_clean or "II)" in between_clean or "III)" in between_clean:
+            break
+            
         # If the intermediate text is a joining punctuation/conjunction (e.g. "-", "od.", "oder", "und", ",", or empty)
         if len(between_clean) < 15 and any(j in between_clean or between_clean == "" for j in ['-', 'od.', 'oder', 'und', ',', '/']):
             result += between_text + next_match['content']

@@ -86,6 +86,11 @@ const testCases = [
     assertion: (card) => card.translation === "hinunter- od. hinterschlucken, -schlingen, verschlucken, verschlingen",
     description: "Verb 'devorare' has correctly resolved prefix-merged translation"
   },
+  {
+    latin: "appellare",
+    assertion: (card) => card.translation === "ansprechen, anreden",
+    description: "Verb 'appellare' skips etymological literal meaning to resolve correctly"
+  },
   // Proper noun check
   {
     latin: "andromeda",
