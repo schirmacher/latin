@@ -6,24 +6,35 @@ const formatNounTranslation = (translation, genderStr, caseStr) => {
   if (!genderStr || !caseStr) return translation;
   const g = genderStr.toLowerCase();
   const c = caseStr.toLowerCase();
+  const isPlural = c.includes("plural") || c.includes(" pl.");
+  
+  let clean = translation.replace(/^(der|die|das|des|dem|den)\s+/i, '').trim();
+  
+  if (isPlural) {
+    let article = "die";
+    if (c.includes("genitiv")) article = "der";
+    else if (c.includes("dativ") || c.includes("ablativ")) article = "den";
+    return `${article} ${clean}`;
+  }
+  
   const isFem = g.includes("f.") || g.includes("(f)") || g.includes(" f");
   const isMasc = g.includes("m.") || g.includes("(m)") || g.includes(" m");
   const isNeut = g.includes("n.") || g.includes("(n)") || g.includes(" n");
   if (!isFem && !isMasc && !isNeut) return translation;
-  let clean = translation.replace(/^(der|die|das|des|dem|den)\s+/i, '').trim();
+  
   let article = "";
   if (isFem) {
-    if (c.includes("genitiv") || c.includes("dativ")) article = "der";
+    if (c.includes("genitiv") || c.includes("dativ") || c.includes("ablativ")) article = "der";
     else article = "die";
   } else if (isMasc) {
     if (c.includes("nominativ")) article = "der";
     else if (c.includes("genitiv")) article = "des";
-    else if (c.includes("dativ")) article = "dem";
+    else if (c.includes("dativ") || c.includes("ablativ")) article = "dem";
     else if (c.includes("akkusativ")) article = "den";
     else article = "der";
   } else if (isNeut) {
     if (c.includes("genitiv")) article = "des";
-    else if (c.includes("dativ")) article = "dem";
+    else if (c.includes("dativ") || c.includes("ablativ")) article = "dem";
     else article = "das";
   }
   return `${article} ${clean}`;
