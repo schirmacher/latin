@@ -102,6 +102,11 @@ const testCases = [
     assertion: (card) => card.translation === "Andromeda",
     description: "Proper noun 'andromeda' skips suffix ending to resolve correctly"
   },
+  {
+    latin: "acrisius",
+    assertion: (card) => card.translation === "Acrisius",
+    description: "Proper noun 'acrisius' uses lesson translation rather than parsing derivations"
+  },
   // Pronoun check
   {
     latin: "hic",

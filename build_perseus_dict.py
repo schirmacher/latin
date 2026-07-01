@@ -256,10 +256,13 @@ for clean_lemma, info in lemma_to_info.items():
         html_content = '<hr style="margin: 16px 0; border: none; border-top: 1px dashed rgba(255,255,255,0.15);" />'.join([d for w, d in defs])
         
         # Automatically extract clean translation from HTML (Noun-aware)
-        is_noun = "substantiv" in info['pos'].lower() or "eigenname" in info['pos'].lower()
-        extracted_trans = clean_html_translation(html_content, candidates, is_noun)
-        if not extracted_trans:
+        if "eigenname" in info['pos'].lower():
             extracted_trans = info['lemma_translation'] if info['lemma_translation'] else info['translation']
+        else:
+            is_noun = "substantiv" in info['pos'].lower()
+            extracted_trans = clean_html_translation(html_content, candidates, is_noun)
+            if not extracted_trans:
+                extracted_trans = info['lemma_translation'] if info['lemma_translation'] else info['translation']
     else:
         not_found.append(clean_lemma)
         html_content = f"<p>Kein detaillierter Eintrag für <b>{clean_lemma}</b> im Georges Handwörterbuch gefunden.</p>"
