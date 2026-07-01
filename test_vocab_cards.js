@@ -97,6 +97,12 @@ const testCases = [
     latin: "hic",
     assertion: (card) => card.translation === "dieser, diese, dieses",
     description: "Pronoun 'hic' skips article-aware noun segment selection to resolve correctly"
+  },
+  // Adjective check
+  {
+    latin: "maximus",
+    assertion: (card) => card.translation.toLowerCase() === "der größte (nominativ)",
+    description: "Adjective 'maximus' uses correctly formatted comparative/superlative base form translation"
   }
 ];
 

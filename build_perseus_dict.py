@@ -178,11 +178,13 @@ for inflected, content in lexicon_entries:
     lemma_match = re.search(r'lemma:\s*"([^"]+)"', content)
     pos_match = re.search(r'pos:\s*"([^"]+)"', content)
     trans_match = re.search(r'translation:\s*"([^"]+)"', content)
+    lemma_trans_match = re.search(r'lemmaTranslation:\s*"([^"]+)"', content)
     
     if lemma_match and pos_match and trans_match:
         lemma = lemma_match.group(1)
         pos = pos_match.group(2) if len(pos_match.groups()) > 1 else pos_match.group(1)
         translation = trans_match.group(1)
+        lemma_translation = lemma_trans_match.group(1).split('/')[0].split(';')[0].strip() if lemma_trans_match else ""
         
         # Clean lemma to get first word
         clean_lemma = re.split(r'[,;\s]', lemma)[0].lower().strip().replace('[', '').replace(']', '')
@@ -191,7 +193,8 @@ for inflected, content in lexicon_entries:
         if clean_lemma and clean_lemma not in lemma_to_info:
             lemma_to_info[clean_lemma] = {
                 'pos': pos,
-                'translation': translation.split('/')[0].split(';')[0].strip()
+                'translation': translation.split('/')[0].split(';')[0].strip(),
+                'lemma_translation': lemma_translation
             }
 
 print(f"Parsed {len(lemma_to_info)} unique lemmas from texts.js.")
@@ -235,11 +238,11 @@ for clean_lemma, info in lemma_to_info.items():
         is_noun = "substantiv" in info['pos'].lower() or "eigenname" in info['pos'].lower()
         extracted_trans = clean_html_translation(html_content, candidates, is_noun)
         if not extracted_trans:
-            extracted_trans = info['translation'] # Fallback
+            extracted_trans = info['lemma_translation'] if info['lemma_translation'] else info['translation']
     else:
         not_found.append(clean_lemma)
         html_content = f"<p>Kein detaillierter Eintrag für <b>{clean_lemma}</b> im Georges Handwörterbuch gefunden.</p>"
-        extracted_trans = info['translation']
+        extracted_trans = info['lemma_translation'] if info['lemma_translation'] else info['translation']
         
     local_dict[clean_lemma] = {
         'translation': extracted_trans,
