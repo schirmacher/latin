@@ -2,6 +2,33 @@ import { texts } from './data/texts.js';
 import { vocabularyDecks, baseTranslationOverrides } from './data/vocabulary.js';
 import { georgesDictionary } from './data/dictionary.js';
 
+const formatNounTranslation = (translation, genderStr, caseStr) => {
+  if (!genderStr || !caseStr) return translation;
+  const g = genderStr.toLowerCase();
+  const c = caseStr.toLowerCase();
+  const isFem = g.includes("f.") || g.includes("(f)") || g.includes(" f");
+  const isMasc = g.includes("m.") || g.includes("(m)") || g.includes(" m");
+  const isNeut = g.includes("n.") || g.includes("(n)") || g.includes(" n");
+  if (!isFem && !isMasc && !isNeut) return translation;
+  let clean = translation.replace(/^(der|die|das|des|dem|den)\s+/i, '').trim();
+  let article = "";
+  if (isFem) {
+    if (c.includes("genitiv") || c.includes("dativ")) article = "der";
+    else article = "die";
+  } else if (isMasc) {
+    if (c.includes("nominativ")) article = "der";
+    else if (c.includes("genitiv")) article = "des";
+    else if (c.includes("dativ")) article = "dem";
+    else if (c.includes("akkusativ")) article = "den";
+    else article = "der";
+  } else if (isNeut) {
+    if (c.includes("genitiv")) article = "des";
+    else if (c.includes("dativ")) article = "dem";
+    else article = "das";
+  }
+  return `${article} ${clean}`;
+};
+
 export class ReaderController {
   constructor(appState, updateStatsCallback) {
     this.appState = appState;
@@ -324,6 +351,7 @@ export class ReaderController {
 
         // Append Nominativ suffix for nouns and adjectives to make it clear they are base forms
         if (this.selectedWordData.pos.includes("Substantiv") || this.selectedWordData.pos.includes("Adjektiv")) {
+          baseTranslation = formatNounTranslation(baseTranslation, this.selectedWordData.lemma, "Nominativ");
           if (!baseTranslation.includes("(") && !baseTranslation.includes("Nominativ")) {
             baseTranslation = `${baseTranslation} (Nominativ)`;
           }
@@ -349,7 +377,8 @@ export class ReaderController {
       if (this.selectedWordData.pos.includes("Substantiv") || this.selectedWordData.pos.includes("Adjektiv")) {
         const caseMatch = this.selectedWordData.parse.match(/(Nominativ|Genitiv|Dativ|Akkusativ|Ablativ|Vokativ)/i);
         if (caseMatch) {
-          displayTranslation = `${this.selectedWordData.translation} (${caseMatch[0]})`;
+          let nounTrans = formatNounTranslation(this.selectedWordData.translation, this.selectedWordData.lemma, caseMatch[0]);
+          displayTranslation = `${nounTrans} (${caseMatch[0]})`;
         }
       } else if (this.selectedWordData.pos.includes("Verb")) {
         const parseLower = this.selectedWordData.parse.toLowerCase();
@@ -441,9 +470,11 @@ export class ReaderController {
         if (wordData.pos.includes("Substantiv") || wordData.pos.includes("Adjektiv")) {
           const caseMatch = wordData.parse.match(/(Nominativ|Genitiv|Dativ|Akkusativ|Ablativ|Vokativ)/i);
           if (caseMatch) {
-            baseTranslation = `${wordData.translation} (${caseMatch[0]})`;
+            let nounTrans = formatNounTranslation(wordData.translation, wordData.lemma, caseMatch[0]);
+            baseTranslation = `${nounTrans} (${caseMatch[0]})`;
           } else {
-            baseTranslation = `${wordData.translation} (Nominativ)`;
+            let nounTrans = formatNounTranslation(wordData.translation, wordData.lemma, "Nominativ");
+            baseTranslation = `${nounTrans} (Nominativ)`;
           }
         } else if (wordData.pos.includes("Verb")) {
           const parseLower = wordData.parse.toLowerCase();

@@ -117,6 +117,33 @@ export class VocabTrainerController {
     const perseusCards = [];
     const addedKeys = new Set();
 
+    const formatNounTranslation = (translation, genderStr, caseStr) => {
+      if (!genderStr || !caseStr) return translation;
+      const g = genderStr.toLowerCase();
+      const c = caseStr.toLowerCase();
+      const isFem = g.includes("f.") || g.includes("(f)") || g.includes(" f");
+      const isMasc = g.includes("m.") || g.includes("(m)") || g.includes(" m");
+      const isNeut = g.includes("n.") || g.includes("(n)") || g.includes(" n");
+      if (!isFem && !isMasc && !isNeut) return translation;
+      let clean = translation.replace(/^(der|die|das|des|dem|den)\s+/i, '').trim();
+      let article = "";
+      if (isFem) {
+        if (c.includes("genitiv") || c.includes("dativ")) article = "der";
+        else article = "die";
+      } else if (isMasc) {
+        if (c.includes("nominativ")) article = "der";
+        else if (c.includes("genitiv")) article = "des";
+        else if (c.includes("dativ")) article = "dem";
+        else if (c.includes("akkusativ")) article = "den";
+        else article = "der";
+      } else if (isNeut) {
+        if (c.includes("genitiv")) article = "des";
+        else if (c.includes("dativ")) article = "dem";
+        else article = "das";
+      }
+      return `${article} ${clean}`;
+    };
+
     // Retrieve all chapters beginning with 'fabulae_faciles' (Perseus)
     const perseusTexts = texts.filter(t => t.id.startsWith('fabulae_faciles'));
     
@@ -146,6 +173,7 @@ export class VocabTrainerController {
 
           // Append Nominativ suffix for nouns and adjectives to make it clear they are base forms
           if (info.pos.includes("Substantiv") || info.pos.includes("Adjektiv")) {
+            baseTranslation = formatNounTranslation(baseTranslation, info.lemma, "Nominativ");
             if (!baseTranslation.includes("(") && !baseTranslation.includes("Nominativ")) {
               baseTranslation = `${baseTranslation} (Nominativ)`;
             }
@@ -169,7 +197,8 @@ export class VocabTrainerController {
           if (info.pos.includes("Substantiv") || info.pos.includes("Adjektiv")) {
             const caseMatch = info.parse.match(/(Nominativ|Genitiv|Dativ|Akkusativ|Ablativ|Vokativ)/i);
             if (caseMatch) {
-              displayTranslation = `${info.translation} (${caseMatch[0]})`;
+              let nounTrans = formatNounTranslation(info.translation, info.lemma, caseMatch[0]);
+              displayTranslation = `${nounTrans} (${caseMatch[0]})`;
             }
           } else if (info.pos.includes("Verb")) {
             const parseLower = info.parse.toLowerCase();
