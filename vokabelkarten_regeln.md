@@ -84,3 +84,26 @@ Um zu verhindern, dass der Schüler die richtige Antwort durch einfaches Ausschl
 * Das Programm liest das Attribut `explanation` oder `pos` der richtigen Karte aus, um die Wortart zu bestimmen (z. B. *"Verb"*, *"Substantiv"*, *"Adjektiv"*).
 * Es filtert den Vokabelstapel nach anderen Karten derselben Kategorie, mischt diese und wählt drei zufällige Distraktoren aus.
 * Sollte ein Stapel zu wenige Wörter derselben Wortart enthalten, fallen die Distraktoren auf Wörter mit ähnlichen Merkmalen zurück.
+
+---
+
+## 5. Datenquellen und die absolute Wahrheit (Ground Truth)
+
+Um die Zuverlässigkeit und Fehlerfreiheit der Vokabelkarten zu garantieren, unterscheidet die App klar zwischen verschiedenen Datenebenen:
+
+### 5.1 Der Georges-Wörterbucheintrag (100 % Ground Truth)
+* **Die Quelle:** Der vollständige Artikeltext auf der Rückseite der Karten sowie im Analyse-Seitenfenster stammt direkt und unverändert aus der digitalen Datenbank des **Karl Ernst Georges (Ausführliches Handwörterbuch, 1913)**.
+* **Keine Algorithmen:** Diese Definitionen werden **nicht** durch Algorithmen oder künstliche Intelligenz generiert oder interpretiert, sondern byte-genau aus dem Wörterbuchindex ausgelesen. Sie repräsentieren die absolute, wissenschaftliche Wahrheit (Ground Truth) für jedes Lemma.
+
+### 5.2 Die kurzen Übersetzungen (Vorder- und Rückseiten-Label)
+Für die kurzen Bezeichnungen im Vokabeltrainer (z. B. für Multiple Choice oder Schnellsuchen) wird folgende Priorisierung angewendet:
+1. **Klasse 1: Manuelle Kuratierung (Menschliche Wahrheit)**
+   * Manuell gepflegte Einträge in `baseTranslationOverrides` und statischen Decks (z. B. *puer* ➜ *"der Junge"*, *timere* ➜ *"fürchten"*). Dies sind feste, fehlerfreie Wahrheiten.
+2. **Klasse 2: Lexikalisches Fallback (Text-Lexikon)**
+   * Liegt kein manueller Eintrag vor, greift das System auf das Vokabelverzeichnis in `texts.js` zurück. Da dieses Verzeichnis ursprünglich KI-unterstützt erstellt wurde, können hier vereinzelt Tense- oder Kasusmängel auftreten, bis wir sie manuell in die Klasse 1 überführen.
+3. **Klasse 3: Algorithmische Ableitung (Grammatik-Anpassung)**
+   * Die grammatikalischen Ergänzungen für Flexionskarten (z. B. das Hinzufügen von Personalpronomen wie *"er/sie/es"* bei Verben oder Kasus-Endungen wie `(Akkusativ)` bei Substantiven) werden auf Basis der im Text hinterlegten Grammatik-Tags algorithmisch erzeugt (z. B. Grundform *"schlafen"* + 3. Person Plural Imperfekt Indikativ Aktiv ➜ *"sie schliefen"*).
+
+### 5.3 Georges als letzte Instanz
+Sollte die kurze Übersetzung einer Karte (Klasse 2 oder 3) ungenau oder unvollständig wirken, ist der vollflächige **Georges-Wörterbucheintrag** auf der Rückseite der Karte die unfehlbare Kontrollinstanz für den Schüler. Sieht er dort Unstimmigkeiten, kann er die Karte über den Button **"Erneut lernen"** sofort zur manuellen Festigung zurücksetzen.
+
