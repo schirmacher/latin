@@ -117,6 +117,55 @@ export class VocabTrainerController {
     const perseusCards = [];
     const addedKeys = new Set();
 
+    const formatNounTranslation = (translation, genderStr, caseStr, baseTranslation = "") => {
+      if (!caseStr) return translation;
+      const c = caseStr.toLowerCase();
+      const isPlural = c.includes("plural") || c.includes(" pl.");
+      
+      let clean = translation.replace(/^(der|die|das|des|dem|den)\s+/i, '').trim();
+      
+      if (isPlural) {
+        let article = "die";
+        if (c.includes("genitiv")) article = "der";
+        else if (c.includes("dativ") || c.includes("ablativ")) article = "den";
+        return `${article} ${clean}`;
+      }
+      
+      let isFem = false, isMasc = false, isNeut = false;
+      if (baseTranslation) {
+        const baseLower = baseTranslation.toLowerCase().trim();
+        if (baseLower.startsWith("die ")) isFem = true;
+        else if (baseLower.startsWith("der ")) isMasc = true;
+        else if (baseLower.startsWith("das ")) isNeut = true;
+      }
+      
+      if (!isFem && !isMasc && !isNeut && genderStr) {
+        const g = genderStr.toLowerCase();
+        isFem = g.includes("f.") || g.includes("(f)") || g.includes(" f");
+        isMasc = g.includes("m.") || g.includes("(m)") || g.includes(" m");
+        isNeut = g.includes("n.") || g.includes("(n)") || g.includes(" n");
+      }
+      
+      if (!isFem && !isMasc && !isNeut) return translation;
+      
+      let article = "";
+      if (isFem) {
+        if (c.includes("genitiv") || c.includes("dativ") || c.includes("ablativ")) article = "der";
+        else article = "die";
+      } else if (isMasc) {
+        if (c.includes("nominativ")) article = "der";
+        else if (c.includes("genitiv")) article = "des";
+        else if (c.includes("dativ") || c.includes("ablativ")) article = "dem";
+        else if (c.includes("akkusativ")) article = "den";
+        else article = "der";
+      } else if (isNeut) {
+        if (c.includes("genitiv")) article = "des";
+        else if (c.includes("dativ") || c.includes("ablativ")) article = "dem";
+        else article = "das";
+      }
+      return `${article} ${clean}`;
+    };
+
     // Retrieve all chapters beginning with 'fabulae_faciles' (Perseus)
     const perseusTexts = texts.filter(t => t.id.startsWith('fabulae_faciles'));
     
@@ -146,6 +195,7 @@ export class VocabTrainerController {
 
           // Append Nominativ suffix for nouns and adjectives to make it clear they are base forms
           if (info.pos.includes("Substantiv") || info.pos.includes("Adjektiv")) {
+            baseTranslation = formatNounTranslation(baseTranslation, info.lemma, "Nominativ", baseTranslation);
             if (!baseTranslation.includes("(") && !baseTranslation.includes("Nominativ")) {
               baseTranslation = `${baseTranslation} (Nominativ)`;
             }
@@ -169,7 +219,15 @@ export class VocabTrainerController {
           if (info.pos.includes("Substantiv") || info.pos.includes("Adjektiv")) {
             const caseMatch = info.parse.match(/(Nominativ|Genitiv|Dativ|Akkusativ|Ablativ|Vokativ)/i);
             if (caseMatch) {
-              displayTranslation = `${info.translation} (${caseMatch[0]})`;
+              let baseTrans = "";
+              const staticCard = this.findStaticVocabCard(lemmaClean);
+              if (staticCard) {
+                baseTrans = staticCard.translation;
+              } else {
+                baseTrans = info.translation;
+              }
+              let nounTrans = formatNounTranslation(info.translation, info.lemma, info.parse, baseTrans);
+              displayTranslation = `${nounTrans} (${caseMatch[0]})`;
             }
           } else if (info.pos.includes("Verb")) {
             const parseLower = info.parse.toLowerCase();
