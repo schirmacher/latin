@@ -3,6 +3,17 @@ import { vocabularyDecks, baseTranslationOverrides } from './data/vocabulary.js'
 import { georgesDictionary } from './data/dictionary.js';
 const formatNounTranslation = (translation, genderStr, caseStr, baseTranslation = "") => {
   if (!caseStr) return translation;
+
+  if (translation.includes("/")) {
+    const terms = translation.split("/");
+    const baseTerms = baseTranslation ? baseTranslation.split("/") : [];
+    const formatted = terms.map((t, idx) => {
+      const bT = baseTerms[idx] || baseTerms[0] || "";
+      return formatNounTranslation(t.trim(), genderStr, caseStr, bT.trim());
+    });
+    return formatted.join(" / ");
+  }
+
   const c = caseStr.toLowerCase();
   const isPlural = c.includes("plural") || c.includes(" pl.");
   
