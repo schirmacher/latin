@@ -240,8 +240,20 @@ for clean_lemma, info in lemma_to_info.items():
         defs = []
         for word, offset, size in index_map[found_key]:
             definition = read_dict_definition(dict_file, offset, size)
-            defs.append(definition)
-        html_content = '<hr style="margin: 16px 0; border: none; border-top: 1px dashed rgba(255,255,255,0.15);" />'.join(defs)
+            defs.append((word, definition))
+            
+        # If there are multiple homonyms, filter them if the lemma matches a specific one
+        if len(defs) > 1:
+            matching_defs = []
+            for w, d in defs:
+                headword_area = d[:150].lower()
+                headword_area_clean = strip_macrons(headword_area)
+                if clean_lemma in headword_area_clean:
+                    matching_defs.append(d)
+            if len(matching_defs) >= 1:
+                defs = [(None, d) for d in matching_defs]
+                
+        html_content = '<hr style="margin: 16px 0; border: none; border-top: 1px dashed rgba(255,255,255,0.15);" />'.join([d for w, d in defs])
         
         # Automatically extract clean translation from HTML (Noun-aware)
         is_noun = "substantiv" in info['pos'].lower() or "eigenname" in info['pos'].lower()

@@ -91,6 +91,11 @@ const testCases = [
     assertion: (card) => card.translation === "ansprechen, anreden",
     description: "Verb 'appellare' skips etymological literal meaning to resolve correctly"
   },
+  {
+    latin: "velle",
+    assertion: (card) => card.translation === "willens sein, begehren, wünschen",
+    description: "Verb 'velle' resolves homonym 'volo' to 'want' rather than 'fly'"
+  },
   // Proper noun check
   {
     latin: "andromeda",
