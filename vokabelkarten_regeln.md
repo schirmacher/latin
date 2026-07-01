@@ -11,7 +11,6 @@ Um die Begriffe präzise festzulegen, werden hier die im Lateinischen gebräuchl
 ### 1.1 Grundformen (Lemmata) je Wortart
 Die im Wörterbuch nachgeschlagene Grundform eines Wortes wird allgemein als **Lemma** bezeichnet.
 * **Verben:** Die Grundform eines Verbs ist der **Infinitiv** (z. B. *amare* = lieben).
-  *(Hinweis: "Infinitivum" ist die latinisierte Form; im deutschen Sprachgebrauch sagt man schlicht **Infinitiv**).*
 * **Substantive (Nomen):** Die Grundform eines Substantivs ist der **Nominativ Singular** (z. B. *filius* = der Sohn, *mater* = die Mutter).
 * **Adjektive:** Die Grundform eines Adjektivs ist der **Nominativ Singular Maskulinum** (z. B. *magnus* = groß, *beatus* = glücklich).
 * **Pronomen:** Die Grundform eines Pronomens ist ebenfalls meist der **Nominativ Singular Maskulinum** (z. B. *is* = er, *qui* = welcher).
@@ -40,21 +39,22 @@ Beim Laden oder Einlesen eines lateinischen Textes läuft die Vokabelgenerierung
 1. Der Text wird in einzelne Wort-Token zerlegt.
 2. Satzzeichen werden entfernt, alle Wörter werden in Kleinbuchstaben umgewandelt.
 
-### Regel 2.2: Erstellung der Grundform-Karte (Lemma-Karte)
-Für jedes gefundene Wort wird die grammatikalische Grundform (das Lemma) ermittelt.
-* Es wird eine **Grundform-Karte** erstellt.
-* **Vorderseite:** Das Lemma (z. B. *amare* oder *filius*).
-* **Rückseite (Übersetzung):** Die deutsche Grundform aus dem kuratierten Georges-Wörterbuch (z. B. *"lieben"* für *amare*; *"der Sohn"* für *filius*).
-* **Zusatzdaten:** Georges-Wörterbucheintrag (HTML) und Wortart als Erklärung.
-
-### Regel 2.3: Erstellung der Textform-Karte (Flexions-Karte)
-Wenn das im Text gelesene Wort eine abgewandelte (flektierte) Form der Grundform ist (z. B. *amabat* statt *amare*, oder *filium* statt *filius*), wird eine **zweite, separate Karte** erstellt.
-* **Vorderseite:** Die konkrete Textform (z. B. *amabat* oder *filium*).
-* **Rückseite (Übersetzung):** Die im Kontext passende deutsche Übersetzung, ergänzt um den Kasus bei Substantiven/Adjektiven, um Zweideutigkeiten auszuschließen:
-  * z. B. *amabat* ➜ *"liebte"*
-  * z. B. *filium* ➜ *"den Sohn (Akkusativ)"*
-* **Zusatzdaten:** Die genaue grammatikalische Bestimmung (z. B. *"3. Person Singular Imperfekt Aktiv"* oder *"Akkusativ Singular Maskulinum"*).
-* **Referenz-Link:** Die Karte erhält das Attribut `forms` mit dem Wert `"Form von: [Grundform]"` (z. B. `"Form von: filius"`).
+  ### Regel 2.2: Erstellung der Grundform-Karte (Lemma-Karte)
+  Für jedes gefundene Wort wird die grammatikalische Grundform (das Lemma) ermittelt.
+  * Es wird eine **Grundform-Karte** erstellt.
+  * **Vorderseite:** Das Lemma (z. B. *amare* oder *filius*).
+  * **Rückseite (Übersetzung):** Die deutsche Grundform aus dem kuratierten Georges-Wörterbuch (z. B. *"lieben"* für *amare*; *"der Sohn (Nominativ)"* für *filius*).
+    * *Hinweis zur Eindeutigkeit:* Für Substantive und Adjektive wird auf der Rückseite standardmäßig der Kasus-Hinweis `(Nominativ)` angehängt (z. B. *"Mutter (Nominativ)"* statt nur *"Mutter"*), um Verwechslungen mit anderen Kasusformen zu verhindern.
+  * **Zusatzdaten:** Georges-Wörterbucheintrag (HTML) und Wortart als Erklärung.
+  
+  ### Regel 2.3: Erstellung der Textform-Karte (Flexions-Karte)
+  Wenn das im Text gelesene Wort eine abgewandelte (flektierte) Form der Grundform ist (z. B. *amabat* statt *amare*, oder *filium* statt *filius*), wird eine **zweite, separate Karte** erstellt.
+  * **Vorderseite:** Die konkrete Textform (z. B. *amabat* oder *filium*).
+  * **Rückseite (Übersetzung):** Die im Kontext passende deutsche Übersetzung, präzisiert nach folgenden Mustern:
+    * **Verben:** Bei konjugierten Verbformen wird zwingend das passende deutsche Personalpronomen vorangestellt, basierend auf der grammatikalischen Person und Numerus (z. B. *"er/sie/es lief"* statt nur *"lief"*; *"er/sie/es läuft"* statt nur *"läuft"*; *"sie liefen"* statt *"liefen"*). Dies gilt **nicht** für den Infinitiv (Grundform).
+    * **Substantive / Adjektive:** Um Mehrdeutigkeiten auszuschließen (z. B. bei Wörtern wie *"Mutter"*, die im Nominativ *mater* und im Akkusativ *matrem* heißen können), wird der Kasus in Klammern angehängt (z. B. *"die Mutter (Nominativ)"* bzw. *"die Mutter (Akkusativ)"*).
+  * **Zusatzdaten:** Die genaue grammatikalische Bestimmung (z. B. *"3. Person Singular Imperfekt Aktiv"* oder *"Akkusativ Singular Maskulinum"*).
+  * **Referenz-Link:** Die Karte erhält das Attribut `forms` mit dem Wert `"Form von: [Grundform]"` (z. B. `"Form von: filius"`).
 
 ---
 
